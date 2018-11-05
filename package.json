@@ -1,0 +1,58 @@
+{
+  "_from": "homebridge-creskit",
+  "_id": "homebridge-creskit@1.1.7",
+  "_inBundle": false,
+  "_integrity": "sha1-DxOg9CmIQN/sdq20mFumRVCNpYw=",
+  "_location": "/homebridge-creskit",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "homebridge-creskit",
+    "name": "homebridge-creskit",
+    "escapedName": "homebridge-creskit",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/homebridge-creskit/-/homebridge-creskit-1.1.7.tgz",
+  "_shasum": "0f13a0f4298840dfec76adb4985ba645508da58c",
+  "_spec": "homebridge-creskit",
+  "_where": "D:\\lingbo\\lingbo_code\\webCode",
+  "author": {
+    "name": "Marcus Adolfsson"
+  },
+  "bugs": {
+    "url": "https://github.com/marcusadolfsson/homebridge-creskit/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "async": "^2.0.1",
+    "request": "^2.65.0"
+  },
+  "deprecated": false,
+  "description": "A homebridge plugin for Crestron integration",
+  "engines": {
+    "homebridge": ">=0.2.0",
+    "node": ">=0.12.0"
+  },
+  "homepage": "https://github.com/marcusadolfsson/homebridge-creskit#readme",
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "homebridge-creskit",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcusadolfsson/homebridge-creskit.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.1.7"
+}

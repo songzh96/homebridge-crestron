@@ -1,0 +1,369 @@
+/*******************************************************************************************
+CresKit Module
+
+This is a functional protype of the CresKit module. Very basic! Save and Compile to use in
+your project.
+
+The module creates a TCP Server on the Creston system (only tested on MC3),
+which communicates with the Homebridge CresKit Plugin using a plain text socket.
+
+The CresKit Plug communicates to the Server using three commands:
+
+Set - Sets the status
+Get - Gets the status from the Crestron system
+Event - Push a status change on the Crestron system to Homebridge
+
+*******************************************************************************************/
+
+#SYMBOL_NAME "CresKit"
+#HINT "CresKit Server"
+#DEFAULT_VOLATILE
+
+STRING_PARAMETER IPAddr$[16];
+INTEGER_PARAMETER Port;
+
+DIGITAL_INPUT 	_SKIP_, _SKIP_;
+DIGITAL_INPUT Lights_Status[60]; // Feedback for Lights
+DIGITAL_INPUT Switch_Status[40]; // Feedback for Switch/Scenes
+DIGITAL_INPUT GarageDoor_Status[4]; // Feedback for Garage Doors. High = Closed, Low = Open (Use NOT symbol to inverse if needed)
+DIGITAL_INPUT Alarm_Stay[1], Alarm_Away[1], Alarm_Night[1], Alarm_Disarmed[1], Alarm_Triggered[1]; // Interlock before sending to modue. High = Active
+DIGITAL_INPUT SingleSpeedFan_Status[10]; //
+DIGITAL_INPUT ContactSensor_Status[5];
+DIGITAL_INPUT Lock_Status[5]; // High Secured, Low Unsecured
+
+ANALOG_INPUT MultiSpeedFan_Status[6]; //Outside of CresKit, make fans accept/report Analog Value = 0 off, 1-4 speed
+ANALOG_INPUT Shades_Status[5]; // 0 (closed) - 100 (open)
+
+
+DIGITAL_OUTPUT 	_SKIP_, _SKIP_;
+DIGITAL_OUTPUT Lights_Set[60]; // Pulses Output - Modify code below if different behavior is needed
+DIGITAL_OUTPUT Switch_Set[40]; // Pulse
+DIGITAL_OUTPUT GarageDoor_Set[4]; // Pulse
+DIGITAL_OUTPUT Alarm_Stay_Set[1], Alarm_Away_Set[1], Alarm_Night_Set[1], Alarm_Disarmed_Set[1], _SKIP_; // Pulse
+DIGITAL_OUTPUT SingleSpeedFan_Set[10]; // Pulse
+DIGITAL_OUTPUT _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_;
+
+DIGITAL_OUTPUT Lock_Set[5];
+
+ANALOG_OUTPUT MultiSpeedFan_Set[6];  // See MultiSpeedFan_Status
+ANALOG_OUTPUT Shades_Set[6]; // See MultiSpeedFan_Status
+
+SIGNED_INTEGER doServerConnected;
+String InternalRxBuffer[65000];
+TCP_SERVER MyServer[9999];
+
+#BEGIN_PARAMETER_PROPERTIES IPAddr$  // To restrict IP access, enter client IP in module.
+   propDefaultValue = "0.0.0.0";
+   propShortDescription = "Allow Connections from IP";
+#END_PARAMETER_PROPERTIES
+#BEGIN_PARAMETER_PROPERTIES Port
+   propValidUnits = unitDecimal;
+   propDefaultValue = 50001d;
+   propShortDescription = "Port";
+#END_PARAMETER_PROPERTIES
+
+
+function StartServer() {
+	SIGNED_INTEGER status;
+	status = SocketServerStartListen(MyServer, IPAddr$, Port);
+	if (status < 0) {
+		Print("Error listening to %s on port %u (status: %d)", IPAddr$, Port, status);
+	} else {
+        Print("Server started to %s on port %u (status: %d)", IPAddr$, Port, status);
+	}
+}
+
+function SocketTx(STRING ServerTx) {
+    signed_integer iStatus;
+
+    iStatus = SocketSend(MyServer, ServerTx);
+
+    if (iStatus < 0) {
+		Print("Error Sending to MyServer: %d\n", iStatus);
+    } else {
+		//Print("Sent %s\n", ServerTx);
+	}
+}
+
+function CmdBuilder(STRING Service, STRING ID, STRING Cmd, String Value) {
+	STRING CmdBuilder$[100];
+ 	CmdBuilder$ = Service + ":" + ID + ":" + Cmd + ":" + Value + "*";
+	SocketTx(CmdBuilder$); // Use a proper queue in future?
+}
+
+function CmdParser(STRING ServerRx) {
+    STRING Service[100];
+    STRING ID[100];
+	STRING Cmd[100];
+	STRING Value[100];
+	INTEGER IDInt, ValueInt;
+	String returnvalue$[100];
+  	INTEGER returnvalue;
+
+
+	Service = REMOVE(":",ServerRx);
+   	Service = LEFT(Service, (Len(Service)-1));
+
+	ID = REMOVE(":",ServerRx);
+   	ID = LEFT(ID, (Len(ID)-1));
+    IDInt = Atoi(ID);
+
+	Cmd = REMOVE(":",ServerRx);
+   	Cmd = LEFT(Cmd, (Len(Cmd)-1));
+
+	Value = ServerRx;
+   	ValueInt = Atoi(Value);
+
+	// Command Router
+	//Print("CmdParser: %s %d %s %d\n", Service, IDInt, Cmd, ValueInt);
+
+	//--------------------
+	// set Cmd
+	//--------------------
+	if (Service="Lightbulb" && Cmd="setPowerState") {
+		// Toggle
+		if ((ValueInt=1 && Lights_Status[IDInt]=0) || (ValueInt=0 && Lights_Status[IDInt]=1)) { // Only pulse if light is off
+    		Pulse(1,Lights_Set[IDInt]);
+		}
+	}
+	if (Service="Switch" && Cmd="setPowerState") {
+		// Toggle
+		if ((ValueInt=1 && Switch_Status[IDInt]=0) || (ValueInt=0 && Switch_Status[IDInt]=1)) {
+			Pulse(1,Switch_Set[IDInt]);
+		}
+	}
+    if (Service="SingleSpeedFan" && Cmd="setPowerState") {
+		// Toggle
+		if ((ValueInt=1 && SingleSpeedFan_Status[IDInt]=0) || (ValueInt=0 && SingleSpeedFan_Status[IDInt]=1)) {
+			Pulse(1,SingleSpeedFan_Set[IDInt]);
+		}
+	}
+	if (Service="MultiSpeedFan" && Cmd="setRotationSpeed") {
+		if (ValueInt=0) {
+	    	returnvalue = 0;
+		} else if (ValueInt <= 25) {
+	        returnvalue = 1;
+		} else if (ValueInt <= 50) {
+	        returnvalue = 2;
+	    } else if (ValueInt <= 75) {
+	        returnvalue = 3;
+		} else if (ValueInt <= 100) {
+	        returnvalue = 4;
+		} else if (ValueInt = 999) {
+        	if (MultiSpeedFan_Status[IDInt]=0) { // if off, full speed
+				returnvalue = 4;
+			} else {
+            	returnvalue = -1; //otherwise current speed
+			}
+
+		}
+
+		//Print("setRotationSpeed: %s %d %s %d %d %d\n", Service, IDInt, Cmd, ValueInt, returnvalue, MultiSpeedFan_Status[IDInt])
+        if (returnvalue>=0) {
+			MultiSpeedFan_Set[IDInt] = returnvalue; //0 off, 1-4
+		}
+	}
+
+	if (Service="Lock" && Cmd="setLockTargetState") {
+		// Switch to discreet calls?
+		if ((ValueInt=1 && Lock_Status[IDInt]=0) || (ValueInt=0 && Lock_Status[IDInt]=1)) {
+			Pulse(1,Lock_Set[IDInt]);
+		}
+	}
+
+	if (Service="GarageDoorOpener" && Cmd="setTargetDoorState") {
+		// Toggle
+		if ((ValueInt=1 && GarageDoor_Status[IDInt]=0) || (ValueInt=0 && GarageDoor_Status[IDInt]=1)) { // 0=open, 1=closed. Only open if garage door is closed.
+    		Pulse(2,GarageDoor_Set[IDInt]);
+		}
+	}
+    if (Service="SecuritySystem" && Cmd="setSecuritySystemTargetState") {
+		if (ValueInt=0) {
+        	Pulse(1,Alarm_Stay_Set[IDInt]);
+		} else if (ValueInt=1) {
+        	Pulse(1,Alarm_Away_Set[IDInt]);
+		} else if (ValueInt=2) {
+            Pulse(1,Alarm_Night_Set[IDInt]);
+		} else if (ValueInt=3) {
+            Pulse(1,Alarm_Disarmed_Set[IDInt]);
+        }
+	}
+
+    //--------------------
+	// get Cmd (requested by homebridge)
+	//--------------------
+
+	if (Service="Lightbulb" && Cmd="getPowerState") {
+    	CmdBuilder("Lightbulb", ID, "getPowerState", LtoA(Lights_Status[IDInt]));
+	}
+	if (Service="Switch" && Cmd="getPowerState") {
+    	CmdBuilder("Switch", ID, "getPowerState", LtoA(Switch_Status[IDInt]));
+	}
+	if (Service="ContactSensor" && Cmd="getBinarySensorState") {
+    	CmdBuilder("ContactSensor", ID, "getBinarySensorState", LtoA(ContactSensor_Status[IDInt]));
+	}
+	if (Service="Lock" && Cmd="getLockCurrentState") {
+    	CmdBuilder("Lock", ID, "getLockCurrentState", LtoA(Lock_Status[IDInt]));
+	}
+	if (Service="SingleSpeedFan" && Cmd="getPowerState") {
+    	CmdBuilder("SingleSpeedFan", ID, "getPowerState", LtoA(SingleSpeedFan_Status[IDInt]));
+	}
+    if (Service="MultiSpeedFan" && Cmd="getRotationSpeed") {
+		if (MultiSpeedFan_Status[IDInt]=0) {
+	    	returnvalue$ = "0";
+		} else if (MultiSpeedFan_Status[IDInt]=1) {
+	        returnvalue$ = "25";
+		} else if (MultiSpeedFan_Status[IDInt]=2) {
+	        returnvalue$ = "50";
+	    } else if (MultiSpeedFan_Status[IDInt]=3) {
+	        returnvalue$ = "75";
+		} else if (MultiSpeedFan_Status[IDInt]=4) {
+	        returnvalue$ = "100";
+		}
+    	CmdBuilder("MultiSpeedFan", ID, "getRotationSpeed", returnvalue$);
+	}
+	if (Service="GarageDoorOpener" && Cmd="getCurrentDoorState") {
+    	CmdBuilder("GarageDoorOpener", ID, "getCurrentDoorState", LtoA(GarageDoor_Status[IDInt]));
+	}
+	if (Service="SecuritySystem" && Cmd="getSecuritySystemCurrentState") {
+        If (Alarm_Stay[IDInt]=1) {
+        	CmdBuilder("SecuritySystem", ID, "getSecuritySystemCurrentState", "0");
+		} else if (Alarm_Away[IDInt]=1) {
+            CmdBuilder("SecuritySystem", ID, "getSecuritySystemCurrentState", "1");
+		} else if (Alarm_Night[IDInt]=1) {
+            CmdBuilder("SecuritySystem", ID, "getSecuritySystemCurrentState", "2");
+		} else if (Alarm_Disarmed[IDInt]=1) {
+            CmdBuilder("SecuritySystem", ID, "getSecuritySystemCurrentState", "3");
+		} else if (Alarm_Triggered[IDInt]=1) {
+            CmdBuilder("SecuritySystem", ID, "getSecuritySystemCurrentState", "4");
+		}
+	}
+}
+
+function SocketRx() {
+    String Temp$[65000];
+	//Print("InternalRxBuffer: %s\n", InternalRxBuffer);
+
+    WHILE (LEN(InternalRxBuffer) > 1) {
+		Temp$ = REMOVE("*",InternalRxBuffer);
+    	Temp$ = LEFT(Temp$, (Len(Temp$)-1));
+		CmdParser(Temp$);
+	}
+}
+
+//----------------
+// Change Events - When changes occur (a light bulb is turned on from a keypad), send "event" notification to update Homebridge.
+//----------------
+
+CHANGE Lights_Status {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("Lightbulb", LtoA(ID), "eventPowerState", LtoA(Lights_Status[ID]));
+}
+CHANGE Switch_Status {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("Switch", LtoA(ID), "eventPowerState", LtoA(Switch_Status[ID]));
+}
+CHANGE GarageDoor_Status {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("GarageDoorOpener", LtoA(ID), "eventCurrentDoorState", LtoA(GarageDoor_Status[ID]));
+}
+CHANGE SingleSpeedFan_Status {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("SingleSpeedFan", LtoA(ID), "eventPowerState", LtoA(Switch_Status[ID]));
+}
+CHANGE ContactSensor_Status {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("ContactSensor", LtoA(ID), "eventBinarySensorState", LtoA(ContactSensor_Status[ID]));
+}
+CHANGE Lock_Status {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("Lock", LtoA(ID), "eventLockCurrentState", LtoA(Lock_Status[ID]));
+}
+PUSH Alarm_Stay {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("SecuritySystem", LtoA(ID), "eventSecuritySystemCurrentState", "0");
+}
+PUSH Alarm_Away {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("SecuritySystem", LtoA(ID), "eventSecuritySystemCurrentState", "1");
+}
+PUSH Alarm_Night {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("SecuritySystem", LtoA(ID), "eventSecuritySystemCurrentState", "2");
+}
+PUSH Alarm_Disarmed {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("SecuritySystem", LtoA(ID), "eventSecuritySystemCurrentState", "3");
+}
+PUSH Alarm_Triggered {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("SecuritySystem", LtoA(ID), "eventSecuritySystemCurrentState", "4");
+}
+CHANGE MultiSpeedFan_Status {
+	INTEGER ID;
+	String returnvalue[3];
+	ID = GetLastModifiedArrayIndex();
+
+    if (MultiSpeedFan_Status[ID]=0) {
+    	returnvalue = "0";
+	} else if (MultiSpeedFan_Status[ID]=1) {
+        returnvalue = "25";
+	} else if (MultiSpeedFan_Status[ID]=2) {
+        returnvalue = "50";
+    } else if (MultiSpeedFan_Status[ID]=3) {
+        returnvalue = "75";
+	} else if (MultiSpeedFan_Status[ID]=4) {
+        returnvalue = "100";
+	}
+
+	CmdBuilder("MultiSpeedFan", LtoA(ID), "eventRotationSpeed", returnvalue);
+}
+
+
+//----------------
+//SOCKET FUNCTIONS
+//----------------
+
+SOCKETCONNECT MyServer {
+    doServerConnected = 1;
+    Print("OnConnect: input buffer size is: %d\n", Len(MyServer.SocketRxBuf));
+}
+
+SOCKETDISCONNECT MyServer {
+	doServerConnected = 0;
+}
+
+SOCKETSTATUS MyServer {
+	SIGNED_INTEGER Status;
+    Status = SocketGetStatus();
+
+    Print("The SocketGetStatus returns:       %d\n", Status);
+    Print("The MyServer.SocketStatus returns: %d\n", MyServer.SocketStatus);
+}
+
+SOCKETRECEIVE MyServer {
+	InternalRxBuffer = InternalRxBuffer + MyServer.SocketRxBuf;
+	ClearBuffer(MyServer.SocketRxBuf);
+	SocketRx();
+}
+
+
+///////////// Initialization script
+Function Main() {
+	WaitForInitializationComplete();
+
+    StartServer();
+
+}
+
