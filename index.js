@@ -173,7 +173,16 @@ CresKitAccessory.prototype = {
     },
     setPowerState: function(value, callback) {
         //Do NOT send cmd to Crestron when Homebridge was notified from an Event - Crestron already knows the state!
+        if (value)
+        {
+            value = 1;
+        }
+        else
+        {
+            value = 0;
+        }
         cresKitSocket.write(this.config.type + ":" + this.id + ":setPowerState:" + value + "*"); // (* after value required on set)
+        //this.log("cresKitSocket.write" + (this.config.type + ":" + this.id + ":setPowerState:" + value + "*"));
         callback();
     },
     //---------------
@@ -199,14 +208,19 @@ CresKitAccessory.prototype = {
     setLightBrightness: function(value, callback) {
         //Do NOT send cmd to Crestron when Homebridge was recently notified from an Event - Crestron already knows the state!
         cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:" + value + "*"); // (* after value required on set)
+        //this.log("cresKitSocket.write" + (this.config.type + ":" + this.id + ":setLightBrightness:" + value + "*"));
         callback();
     },
+    
     setLightState: function(value, callback) {
 
-        if (value == 0) {
+        if (value) {
+            cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:999*");
+            
+        } else  { 
             cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:0*");
-        } else if (value == 1) { 
-            cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:999*"); //65536 = 100 if off, otherwise leave current
+            
+            //cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:" + value + "*"); //65536 = 100 if off, otherwise leave current
         }
 
         callback();
@@ -347,7 +361,7 @@ CresKitAccessory.prototype = {
         if (fromEventCheck(this.config.type + ":" + this.id + ":eventRotationState:" + value)==false) {
             if (value == 0) {
                 cresKitSocket.write(this.config.type + ":" + this.id + ":setRotationSpeed:0*");
-                this.log("cresKitSocket.write("+this.config.type + ":" + this.id + ":setRotationSpeed:0*");
+                //this.log("cresKitSocket.write("+this.config.type + ":" + this.id + ":setRotationSpeed:0*");
             }
             if (value == 1) {
             
@@ -369,7 +383,7 @@ CresKitAccessory.prototype = {
         eventEmitter.once(this.config.type + ":" + this.id + ":getCurrentPosition", function(value) {
             try {
                 closeGetStatus(this.config.type + ":" + this.id + ":getCurrentPosition:*");
-                eventEmitter.emit(this.config.type + ":" + this.id + ":eventCurrentPosition",value);
+                eventEmitter.emit(this.config.type + ":" + this.id + ":eventCurrentPosition", value);
                 callback( null, value);
             } catch (err) {
                 this.log(err);
@@ -450,6 +464,121 @@ CresKitAccessory.prototype = {
         //this.log("cresKitSocket.write(" + this.config.type + ":" + this.id + ":setTargetTemperature:" + value + "*");
 
         callback();
+    },
+    //---------------
+    // HeaterCooler
+    //---------------
+    getHeaterCoolerPower: function (callback) {
+        //OFF  = 0; ON  = 1;
+
+        cresKitSocket.write(this.config.type + ":" + this.id + ":getHeaterCoolerPower:*"); // (:* required)
+        openGetStatus.push(this.config.type + ":" + this.id + ":getHeaterCoolerPower:*");
+
+        eventEmitter.once(this.config.type + ":" + this.id + ":getHeaterCoolerPower", function (value) {
+            try {
+                closeGetStatus(this.config.type + ":" + this.id + ":getHeaterCoolerPower:*");
+
+                // Update setTargetHeatingCoolingState via event event
+                eventEmitter.emit(this.config.type + ":" + this.id + ":eventHeaterCoolerPower", value);
+
+                callback(null, value);
+            } catch (err) {
+                this.log(err);
+            }
+        }.bind(this));
+    },
+
+    setHeaterCoolerPower: function (value, callback) {
+        //OFF  = 0; ON  = 1;
+        cresKitSocket.write(this.config.type + ":" + this.id + ":setHeaterCoolerPower:" + value + "*");
+        //this.log("cresKitSocket.write(" + this.config.type + ":" + this.id + ":setTargetHeatingCoolingState:" + value + "*");
+        callback();
+    },
+    getTargetHeaterCoolerState: function (callback) {
+        //INACTIVE = 0;, IDLE = 1; HEATING = 2; COOLING = 3;
+
+        cresKitSocket.write(this.config.type + ":" + this.id + ":getTargetHeaterCoolerState:*"); // (:* required)
+        openGetStatus.push(this.config.type + ":" + this.id + ":getTargetHeaterCoolerState:*");
+
+        eventEmitter.once(this.config.type + ":" + this.id + ":getTargetHeaterCoolerState", function (value) {
+            try {
+                closeGetStatus(this.config.type + ":" + this.id + ":getTargetHeaterCoolerState:*");
+
+                // Update setTargetHeatingCoolingState via event event
+                eventEmitter.emit(this.config.type + ":" + this.id + ":eventTargetHeaterCoolerState", value);
+
+                callback(null, value);
+            } catch (err) {
+                this.log(err);
+            }
+        }.bind(this));
+    },
+
+    setTargetHeaterCoolerState: function (value, callback) {
+        //AUTO  = 0;, HEAT  = 1; COOL  = 2; 
+        cresKitSocket.write(this.config.type + ":" + this.id + ":setTargetHeaterCoolerState:" + value + "*");
+        //this.log("cresKitSocket.write(" + this.config.type + ":" + this.id + ":setTargetHeatingCoolingState:" + value + "*");
+        callback();
+    },
+
+    getCurrentTemperature: function (callback) {
+        cresKitSocket.write(this.config.type + ":" + this.id + ":getCurrentTemperature:*"); // (:* required) on get
+        openGetStatus.push(this.config.type + ":" + this.id + ":getCurrentTemperature:*");
+
+        // Listen Once for value coming back, if it does trigger callback
+        eventEmitter.once(this.config.type + ":" + this.id + ":getCurrentTemperature", function (value) {
+            try {
+                closeGetStatus(this.config.type + ":" + this.id + ":getCurrentTemperature:*");
+
+                callback(null, value);
+            } catch (err) {
+                this.log(err);
+            }
+        }.bind(this));
+    },
+
+    getTargetTemperature: function (callback) {
+        cresKitSocket.write(this.config.type + ":" + this.id + ":getTargetTemperature:*"); // (:* required) on get
+        openGetStatus.push(this.config.type + ":" + this.id + ":getTargetTemperature:*");
+
+        // Listen Once for value coming back, if it does trigger callback
+        eventEmitter.once(this.config.type + ":" + this.id + ":getTargetTemperature", function (value) {
+            try {
+                closeGetStatus(this.config.type + ":" + this.id + ":getTargetTemperature:*");
+
+                callback(null, value);
+            } catch (err) {
+                this.log(err);
+            }
+        }.bind(this));
+    },
+    setTargetTemperature: function (value, callback) {
+        cresKitSocket.write(this.config.type + ":" + this.id + ":setTargetTemperature:" + value + "*"); // (* after value required on set)
+        //this.log("cresKitSocket.write(" + this.config.type + ":" + this.id + ":setTargetTemperature:" + value + "*");
+
+        callback();
+    },
+
+    setRotationSpeed: function (value, callback) {
+        cresKitSocket.write(this.config.type + ":" + this.id + ":setRotationSpeed:" + value + "*"); // (* after value required on set)
+        //this.log("cresKitSocket.write(" + this.config.type + ":" + this.id + ":setTargetTemperature:" + value + "*");
+
+        callback();
+    },
+    getRotationSpeed: function (callback) {
+        cresKitSocket.write(this.config.type + ":" + this.id + ":getRotationSpeed:*"); // (:* required) on get
+        openGetStatus.push(this.config.type + ":" + this.id + ":getRotationSpeed:*");
+
+        // Listen Once for value coming back, if it does trigger callback
+        eventEmitter.once(this.config.type + ":" + this.id + ":getRotationSpeed", function (value) {
+            try {
+                closeGetStatus(this.config.type + ":" + this.id + ":getRotationSpeed:*");
+
+                callback(null, value);
+            } catch (err) {
+                this.log(err);
+            }
+        }.bind(this));
     },
     //---------------
     // AirPurifier
@@ -914,7 +1043,7 @@ CresKitAccessory.prototype = {
                 var LightState = DimLightbulbService
                     .getCharacteristic(Characteristic.On)
                     .on('set', this.setLightState.bind(this));
-
+                    
                 var Brightness = DimLightbulbService
                     .getCharacteristic(Characteristic.Brightness)
                     .on('set',this.setLightBrightness.bind(this))
@@ -923,15 +1052,17 @@ CresKitAccessory.prototype = {
                 // Register a listener for event changes (dim-light)
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventLightBrightness", function(value) {
                     var light_power_value;
-                    if (value == 0) {
-                        light_power_value = 0;
-                    } else {
+                    if(value)
+                    {
                         light_power_value = 1;
                     }
-
+                    else{
+                        light_power_value = 0;
+                    }
                     Brightness.updateValue(value);
                     LightState.updateValue(light_power_value);
                 }.bind(this));
+
                 services.push( DimLightbulbService );
                 break;
             }
@@ -984,38 +1115,6 @@ CresKitAccessory.prototype = {
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventPowerState", function(value) {
                 
                     PowerState.updateValue(value);
-                }.bind(this));
-
-                services.push( fanService );
-                break;
-            }
-
-            case "ThermostatFan": {
-                var fanService = new Service.Fan();
-
-                var RotationState = fanService
-                    .getCharacteristic(Characteristic.On)
-                    .on('set', this.setRotationState.bind(this)); // requied for turning off when not using slider interface
-
-                var RotationSpeed = fanService
-                    .getCharacteristic(Characteristic.RotationSpeed)
-                    .on("set", this.setRotationSpeed.bind(this))
-                    .on("get", this.getRotationSpeed.bind(this));
-
-                eventEmitter.on(this.config.type + ":" + this.id + ":eventRotationSpeed", function(value) {
-
-                    var power_value;
-                    if (value == 0) {
-                        power_value = 0;
-                    } else {
-                        power_value = 1;
-                    }
-
-                    //this.log("FAN DEBUG " + this.config.type + ":" + this.id + ":eventRotationSpeed " + value + " " + power_value);
-
-                    RotationSpeed.updateValue(value);
-                    RotationState.updateValue(power_value);
-
                 }.bind(this));
 
                 services.push( fanService );
@@ -1081,8 +1180,9 @@ CresKitAccessory.prototype = {
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentPosition", function(value) {
                     
                     //PositionState.updateValue(state_value);
+                    TargetPosition.updateValue(value);
                     CurrentPosition.updateValue(value);
-                    TargetPosition.updateValue(value);                 
+                                     
                 }.bind(this));
 
                 services.push( windowCoveringService );
@@ -1104,7 +1204,8 @@ CresKitAccessory.prototype = {
                     .getCharacteristic(Characteristic.TargetTemperature)
                     .setProps({
                         minValue: 16,
-                        maxValue: 32
+                        maxValue: 32,
+                        minStep:1
                       }) 
                     .on('set', this.setTargetTemperature.bind(this))
                     .on('get', this.getTargetTemperature.bind(this));
@@ -1149,6 +1250,137 @@ CresKitAccessory.prototype = {
                 break;
             }
 
+            case "HeaterCooler": {
+                var HeaterCoolerService = new Service.HeaterCooler();
+
+                var HeaterCoolerPower = HeaterCoolerService
+                    .getCharacteristic(Characteristic.Active)                  
+                    .on('get', this.getHeaterCoolerPower.bind(this))
+                    .on('set', this.setHeaterCoolerPower.bind(this));
+                var TargetHeaterCoolerState = HeaterCoolerService
+                    .getCharacteristic(Characteristic.TargetHeaterCoolerState)                  
+                    .on('get', this.getTargetHeaterCoolerState.bind(this))
+                    .on('set', this.setTargetHeaterCoolerState.bind(this));
+                var CurrentHeaterCoolerState = HeaterCoolerService
+                    .getCharacteristic(Characteristic.CurrentHeaterCoolerState)                  
+                    //.on('get', this.getCurrentHeaterCoolerState.bind(this));
+                var CoolingThresholdTemperature = HeaterCoolerService
+                    .getCharacteristic(Characteristic.CoolingThresholdTemperature)
+                    .setProps({
+                        minValue: 16,
+                        maxValue: 32,
+                        minStep:1
+                      }) 
+                    .on('set', this.setTargetTemperature.bind(this))
+                    .on('get', this.getTargetTemperature.bind(this));
+                var HeatingThresholdTemperature = HeaterCoolerService
+                    .getCharacteristic(Characteristic.HeatingThresholdTemperature)
+                    .setProps({
+                        minValue: 16,
+                        maxValue: 32,
+                        minStep:1
+                      }) 
+                    .on('set', this.setTargetTemperature.bind(this))
+                    .on('get', this.getTargetTemperature.bind(this));
+                var CurrentTemperature = HeaterCoolerService
+                    .getCharacteristic(Characteristic.CurrentTemperature)
+                    .setProps({
+                        minValue: 16,
+                        maxValue: 32
+                      })
+                    .on('get', this.getCurrentTemperature.bind(this));
+                var RotationSpeed = HeaterCoolerService
+                    .getCharacteristic(Characteristic.RotationSpeed)
+                    .on('set', this.setRotationSpeed.bind(this))
+                    .on('get', this.getRotationSpeed.bind(this));
+                
+                //PowerState
+                eventEmitter.on(this.config.type + ":" + this.id + ":eventHeaterCoolerPower", function(value) {
+
+                    HeaterCoolerPower.updateValue(value);
+                    
+                }.bind(this)); 
+
+                //TargetHeaterCoolerState and CurrentHeaterCoolerState
+                eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetHeaterCoolerState", function(value) {
+
+                    eventCheckData.push(this.config.type + ":" + this.id + ":eventTargetHeaterCoolerState:" + value);
+                    var currStateValue;
+                    if( value == 1)
+                    {
+                        currStateValue = 2;
+
+                    }
+                    else if(value == 2)
+                    {
+                        currStateValue = 3;
+
+                    }
+                    else if(value == 0){
+                        currStateValue = 1;
+                    }
+                    TargetHeaterCoolerState.updateValue(value);
+                    CurrentHeaterCoolerState.updateValue(currStateValue);
+
+                }.bind(this)); 
+
+                //CurrentTemperature
+                eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentTemperature", function(value) {
+
+                    CurrentTemperature.updateValue(value);
+                    
+                }.bind(this));
+
+                //TargetTemperature
+                eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetTemperature", function(value) {
+
+                    HeatingThresholdTemperature.updateValue(value);
+                    CoolingThresholdTemperature.updateValue(value);
+                    
+                }.bind(this));
+
+                eventEmitter.on(this.config.type + ":" + this.id + ":eventRotationSpeed", function(value) {
+
+                    RotationSpeed.updateValue(value);
+                    
+                }.bind(this));
+
+                services.push( HeaterCoolerService );
+                break;
+            }
+            
+            case "ThermostatFan": {
+                var fanService = new Service.Fan();
+
+                var RotationState = fanService
+                    .getCharacteristic(Characteristic.On)
+                    .on('set', this.setRotationState.bind(this)); // requied for turning off when not using slider interface
+
+                var RotationSpeed = fanService
+                    .getCharacteristic(Characteristic.RotationSpeed)
+                    .on("set", this.setRotationSpeed.bind(this))
+                    .on("get", this.getRotationSpeed.bind(this));
+
+                eventEmitter.on(this.config.type + ":" + this.id + ":eventRotationSpeed", function(value) {
+
+                    var power_value;
+                    if (value == 0) {
+                        power_value = 0;
+                    } else {
+                        power_value = 1;
+                    }
+
+                    //this.log("FAN DEBUG " + this.config.type + ":" + this.id + ":eventRotationSpeed " + value + " " + power_value);
+
+                    RotationSpeed.updateValue(value);
+                    RotationState.updateValue(power_value);
+
+                }.bind(this));
+
+                services.push( fanService );
+                break;
+            }
+            
             case "AirPurifier": {
                 var AirPurifierService = new Service.AirPurifier();
                 var AirPurifierPowerState = AirPurifierService
