@@ -20,7 +20,7 @@ HomeKit accessories are supported:
 - Airpurifier
 - Valve
 
-In Homebridge's config.json file you specify the accessories you want to enable, and link the appropiate Crestron signals via the included SIMPL+ Module (only tested on MC3). You can then use the iOS 10 Home app to tie the accessories to rooms and groups.
+In Homebridge's config.json file you specify the accessories you want to enable, and link the appropiate Crestron signals via the included SIMPL+ Module (tested on MC3,AP3,PRO3). You can then use the iOS 10 Home app to tie the accessories to rooms and groups.
 
 On the Crestron side, the SIMPL+ Module acts as a basic TCP Server and communicates using three type of commands:
 
