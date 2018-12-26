@@ -27,7 +27,7 @@
 #### 软件准备
 1. 为树莓派安装系统，建议安装官方原生系统（已安装的请忽略）。。。。请自行百度
 2. [搭建homebridge环境教程](https://github.com/nfarina/homebridge/wiki/Running-HomeBridge-on-a-Raspberry-Pi),    **本人亲测，可以使用**
-3. 打开终端输入    `sudo npm install -g homebridge-crestron`
+3. 打开终端输入    `sudo npm install -g homebridge-creskit2`
 4. 配置`config.json` 
   - ` sudo nano /home/pi/.homebridge/config.json`
 复制以下内容，然后ctrl+o 回车 ctrl+x
