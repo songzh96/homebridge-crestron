@@ -1,4 +1,5 @@
 ### V1.0
+
 **1. 本项目是基于[homebridge-creskit](https://github.com/marcusadolfsson/homebridge-creskit)进行二次开发的。**
 
 **2. 修改了event事件中的setValue->updateValue。避免重复发值给快思聪。**
@@ -10,6 +11,7 @@
 **5.在原版的基础上增加了多种配件（调光调色灯，空调，风扇，空净以及各类传感器等）**
 
 ### V1.1
+
 **1.修复用Siri对调光灯说“把灯打开”没反应**
 
 **2.增加地暖配件（只可控制温度和开关）**
