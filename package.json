@@ -1,64 +1,35 @@
 {
-  "_from": "homebridge-crestron",
-  "_id": "homebridge-crestron@1.2",
-  "_inBundle": false,
-  "_integrity": "sha1-DxOg9CmIQN/sdq20mFumRVCNpYw=",
-  "_location": "/homebridge-crestron",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "tag",
-    "registry": true,
-    "raw": "homebridge-crestron",
-    "name": "homebridge-crestron",
-    "escapedName": "homebridge-crestron",
-    "rawSpec": "",
-    "saveSpec": null,
-    "fetchSpec": "latest"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  
-  "_resolved": "https://registry.npmjs.org/homebridge-crestron/-/homebridge-crestron-1.2.tgz",
-  "_shasum": "0f13a0f4298840dfec76adb4985ba645508da58c",
-  "_spec": "homebridge-crestron",
-  "_where": "D:\\lingbo\\lingbo_code\\webCode",
-  "author": {
-    "name": "Marcus Adolfsson"
-  },
-  "bugs": {
-    "url": "https://github.com/songzh96/homebridge-crestron/issues"
-  },
-  "bundleDependencies": false,
-  "dependencies": {
-  "async": "^2.6.0",
-  "request": "^2.88.0"
-  },
-  "deprecated": false,
-  "description": "A homebridge plugin for Crestron integration",
-  "engines": {
-  "homebridge": ">=0.4.16",
-  "node": ">=0.12.0"
-  },
-  
-  "keywords": [
-  "homebridge-plugin",
-  "homebridge",
-  "crestron"
-  ],
-  "homepage": "https://github.com/songzh96/homebridge-crestron#readme",
-
-  "license": "ISC",
+  "name": "homebridge-creskit2",
+  "version": "2.1.1",
+  "description": "A crestron plugin for homebridge",
   "main": "index.js",
-  "name": "homebridge-crestron",
+  "scripts": {
+    "test": "make test"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/songzh96/homebridge-crestron.git"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "keywords": [
+    "homebridge",
+    "homebridge-plugin",
+    "homebridge-crestron",
+    "crestron"
+  ],
+  "deprecated": false,
+  "author": "songzh96",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/songzh96/homebridge-crestron/issues"
   },
-  "version": "1.2"
+  "homepage": "https://github.com/songzh96/homebridge-crestron#readme",
+  "dependencies": {
+    "async": "^2.6.1",
+    "request": "^2.88.0"
+  },
+  "engines": {
+    "homebridge": ">=0.4.16",
+    "node": ">=0.12.0"
+    },
+  "devDependencies": {}
 }
-
