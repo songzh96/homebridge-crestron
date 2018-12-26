@@ -1,16 +1,16 @@
 {
-  "_from": "homebridge-creskit",
-  "_id": "homebridge-creskit@1.1.7",
+  "_from": "homebridge-crestron",
+  "_id": "homebridge-crestron@1.2",
   "_inBundle": false,
   "_integrity": "sha1-DxOg9CmIQN/sdq20mFumRVCNpYw=",
-  "_location": "/homebridge-creskit",
+  "_location": "/homebridge-crestron",
   "_phantomChildren": {},
   "_requested": {
     "type": "tag",
     "registry": true,
-    "raw": "homebridge-creskit",
-    "name": "homebridge-creskit",
-    "escapedName": "homebridge-creskit",
+    "raw": "homebridge-crestron",
+    "name": "homebridge-crestron",
+    "escapedName": "homebridge-crestron",
     "rawSpec": "",
     "saveSpec": null,
     "fetchSpec": "latest"
@@ -19,54 +19,46 @@
     "#USER",
     "/"
   ],
-  "engines": {
-  "homebridge": ">=0.4.16",
-  "node": ">=0.12.0"
-  },
-  "dependencies": {
-  "async": "^2.6.0",
-  "request": "^2.88.0"
-  },
-  "keywords": [
-  "homebridge-plugin",
-  "homebridge",
-  "crestron"
-  ],
-  "_resolved": "https://registry.npmjs.org/homebridge-creskit/-/homebridge-creskit-1.1.7.tgz",
+  
+  "_resolved": "https://registry.npmjs.org/homebridge-crestron/-/homebridge-crestron-1.2.tgz",
   "_shasum": "0f13a0f4298840dfec76adb4985ba645508da58c",
-  "_spec": "homebridge-creskit",
+  "_spec": "homebridge-crestron",
   "_where": "D:\\lingbo\\lingbo_code\\webCode",
   "author": {
     "name": "Marcus Adolfsson"
   },
   "bugs": {
-    "url": "https://github.com/marcusadolfsson/homebridge-creskit/issues"
+    "url": "https://github.com/songzh96/homebridge-crestron/issues"
   },
   "bundleDependencies": false,
   "dependencies": {
-    "async": "^2.0.1",
-    "request": "^2.65.0"
+  "async": "^2.6.0",
+  "request": "^2.88.0"
   },
   "deprecated": false,
   "description": "A homebridge plugin for Crestron integration",
   "engines": {
-    "homebridge": ">=0.2.0",
-    "node": ">=0.12.0"
+  "homebridge": ">=0.4.16",
+  "node": ">=0.12.0"
   },
-  "homepage": "https://github.com/marcusadolfsson/homebridge-creskit#readme",
+  
   "keywords": [
-    "homebridge-plugin"
+  "homebridge-plugin",
+  "homebridge",
+  "crestron"
   ],
+  "homepage": "https://github.com/songzh96/homebridge-crestron#readme",
+
   "license": "ISC",
   "main": "index.js",
-  "name": "homebridge-creskit",
+  "name": "homebridge-crestron",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/marcusadolfsson/homebridge-creskit.git"
+    "url": "git+https://github.com/songzh96/homebridge-crestron.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.1.7"
+  "version": "1.2"
 }
 
