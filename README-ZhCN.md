@@ -13,6 +13,7 @@
 ### V1.1
 
 **1.修复用Siri对调光灯说“把灯打开”没反应**
+
 **2.增加地暖配件（只可控制温度和开关）**
 
 ![HomeBridge.png](https://upload-images.jianshu.io/upload_images/3246153-34905aac5cb382fe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
