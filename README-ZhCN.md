@@ -1,8 +1,12 @@
 ### V1.0
 **1. 本项目是基于[homebridge-creskit](https://github.com/marcusadolfsson/homebridge-creskit)进行二次开发的。**
+
 **2. 修改了event事件中的setValue->updateValue。避免重复发值给快思聪。**
+
 **3. 删除了部分Get事件中的event提交请求（部分有所保留，要更新其状态，因为有的配件获取到的值传不到homebridge）**
+
 **4. 删除set事件中的匹配机制，因为我发现根本没必要了**
+
 **5.在原版的基础上增加了多种配件（调光调色灯，空调，风扇，空净以及各类传感器等）**
 
 ### V1.1
