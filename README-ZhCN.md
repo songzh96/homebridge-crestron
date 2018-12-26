@@ -3,19 +3,27 @@
 **2. 修改了event事件中的setValue->updateValue。避免重复发值给快思聪。**
 **3. 删除了部分Get事件中的event提交请求（部分有所保留，要更新其状态，因为有的配件获取到的值传不到homebridge）**
 **4. 删除set事件中的匹配机制，因为我发现根本没必要了**
+**5.在原版的基础上增加了多种配件（调光调色灯，空调，风扇，空净以及各类传感器等）**
+
+### V1.1
+**1.修复用Siri对调光灯说“把灯打开”没反应**
+**2.增加地暖配件（只可控制温度和开关）**
+![HomeBridge.png](https://upload-images.jianshu.io/upload_images/3246153-34905aac5cb382fe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![Crestron](https://upload-images.jianshu.io/upload_images/3246153-847e7112c89bc585.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 # 使用教程
 #### 硬件准备
-1. 树莓派（最好买一个套件，装过系统的）
-2. 一套快思聪系统
+1. 树莓派（建议购买套件，可让店家帮忙安装系统）
+2. 快思聪中控系统
 
 #### 软件准备
-1. 为树莓派安装系统（已安装的请忽略）。。。。请自行百度
-2. 搭建homebridge环境[教程](https://github.com/nfarina/homebridge/wiki/Running-HomeBridge-on-a-Raspberry-Pi),    **本人亲测，可以使用**
+1. 为树莓派安装系统，建议安装官方原生系统（已安装的请忽略）。。。。请自行百度
+2. [搭建homebridge环境教程](https://github.com/nfarina/homebridge/wiki/Running-HomeBridge-on-a-Raspberry-Pi),    **本人亲测，可以使用**
 3. 打开终端输入    `sudo npm install -g homebridge-crestron`
 4. 配置`config.json` 
   - ` sudo nano /home/pi/.homebridge/config.json`
 复制以下内容，然后ctrl+o 回车 ctrl+x
+
 ```
 {
     "bridge": {
@@ -59,17 +67,21 @@
   ]
 }
 ```
+
 - 在终端中输入`homebridge`
-- 根据错误解决问题
-- error conected 查看config.json中的快思聪主机IP和Port对不对，快思聪程序要先上传
-- json文件格式有误，[json文件格式验证](https://jsonlint.com/)
+- 根据错误解决问题（一般是以下两个问题）
+   1. error conected 查看config.json中的快思聪主机IP和Port对不对，快思聪程序要先上传
+   2. json文件格式有误，[json文件格式验证](https://jsonlint.com/)
 - 成功后会出现一个二维码，打开IOS设备，选择家庭-添加配件-扫描二维码-确认添加
 - 打开toolbox进行测试
-- 成功后，可自行查阅源码，进行自定义修改
-
+- 成功后，可自行查阅源码，进行自定义修改以及研究原理
 
 #### 其他信息
-**QQ Group:**107927710
+
+**QQ Group:**107927710，本群有很多大神，主要是小米对接HomeKit
+
+如果有什么问题可以直接issue提问
+
 
 
 
