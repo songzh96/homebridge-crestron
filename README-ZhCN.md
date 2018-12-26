@@ -11,6 +11,7 @@
 
 ### V1.1
 **1.修复用Siri对调光灯说“把灯打开”没反应**
+
 **2.增加地暖配件（只可控制温度和开关）**
 ![HomeBridge.png](https://upload-images.jianshu.io/upload_images/3246153-34905aac5cb382fe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ![Crestron](https://upload-images.jianshu.io/upload_images/3246153-847e7112c89bc585.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -75,6 +76,7 @@
 - 在终端中输入`homebridge`
 - 根据错误解决问题（一般是以下两个问题）
    1. error conected 查看config.json中的快思聪主机IP和Port对不对，快思聪程序要先上传
+   
    2. json文件格式有误，[json文件格式验证](https://jsonlint.com/)
 - 成功后会出现一个二维码，打开IOS设备，选择家庭-添加配件-扫描二维码-确认添加
 - 打开toolbox进行测试
