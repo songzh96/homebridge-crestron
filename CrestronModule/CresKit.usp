@@ -1,3 +1,4 @@
+#CATEGORY "46" "HomeKit" // Custom
 /*******************************************************************************************
 CresKit Module
 
@@ -15,7 +16,7 @@ Event - Push a status change on the Crestron system to Homebridge
 
 *******************************************************************************************/
 
-#SYMBOL_NAME "CresKit"
+#SYMBOL_NAME "HomeKit"
 #HINT "CresKit Server"
 #DEFAULT_VOLATILE
 
@@ -23,30 +24,55 @@ STRING_PARAMETER IPAddr$[16];
 INTEGER_PARAMETER Port;
 
 DIGITAL_INPUT 	_SKIP_, _SKIP_;
-DIGITAL_INPUT Lights_Status[60]; // Feedback for Lights
-DIGITAL_INPUT Switch_Status[40]; // Feedback for Switch/Scenes
-DIGITAL_INPUT GarageDoor_Status[4]; // Feedback for Garage Doors. High = Closed, Low = Open (Use NOT symbol to inverse if needed)
-DIGITAL_INPUT Alarm_Stay[1], Alarm_Away[1], Alarm_Night[1], Alarm_Disarmed[1], Alarm_Triggered[1]; // Interlock before sending to modue. High = Active
-DIGITAL_INPUT SingleSpeedFan_Status[10]; //
-DIGITAL_INPUT ContactSensor_Status[5];
-DIGITAL_INPUT Lock_Status[5]; // High Secured, Low Unsecured
+DIGITAL_INPUT Lights_Status[10],_SKIP_; // Feedback for Lights 
+DIGITAL_INPUT _SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_;
+DIGITAL_INPUT Switch_Status[10],_SKIP_; // Feedback for Switch/Scenes 
+DIGITAL_INPUT _SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_;
 
-ANALOG_INPUT MultiSpeedFan_Status[6]; //Outside of CresKit, make fans accept/report Analog Value = 0 off, 1-4 speed
-ANALOG_INPUT Shades_Status[5]; // 0 (closed) - 100 (open)
+DIGITAL_INPUT Thermostat_OnStatus[2],Thermostat_OffStatus[2],ThermostatFanSpeed_LowStatus[2],
+				ThermostatFanSpeed_MidStatus[2],ThermostatFanSpeed_HighStatus[2],
+ 			    Thermostat_HeatStatus[2],Thermostat_CoolStatus[2],Thermostat_AutoStatus[2],_SKIP_;
+ 
+DIGITAL_INPUT AirPurifier_OnStatus[2],AirPurifier_OffStatus[2],AirPurifier_AutoStatus[2],AirPurifier_ManualStatus[2],
+				AirPurifierFanSpeed_LowStatus[2],AirPurifierFanSpeed_MidStatus[2],AirPurifierFanSpeed_HighStatus[2],_SKIP_;
 
+DIGITAL_INPUT ContactSensor_Status[5],_SKIP_; // Door and window sensor @value 0||1
+DIGITAL_INPUT SmokeSensor_Status[5],_SKIP_; // SmokeSensor @value 0||1
+DIGITAL_INPUT OccupancySensor_Status[5],_SKIP_; // Human body sensor  @value 0||1
+DIGITAL_INPUT MotionSensor_Status[5],_SKIP_;//MotionSensor   @value 0||1
+DIGITAL_INPUT LeakSensor_Status[5],_SKIP_;//LeakSensor  @value 0||1
+
+ANALOG_INPUT DimLight_Brightness[10],_SKIP_; //0 (closed) - 100 (open) 
+ANALOG_INPUT Shades_Position[5],_SKIP_; // 0 (closed) - 100 (open)
+
+ANALOG_INPUT Thermostat_GetTargetTemperature[2],_SKIP_;//TargetTemperature 16-32
+ANALOG_INPUT Thermostat_GetCurrentTemperature[2],_SKIP_;//RoomTemperature 16-32
+
+ANALOG_INPUT AirPurifier_FilterMaintenance_Status[2],_SKIP_;
+//get sensor value 
+ANALOG_INPUT LightSensor_Status[5],_SKIP_; //LightSensor @value 0||10000 LUX
+ANALOG_INPUT Get_PM2_5Value[5],_SKIP_;
+ANALOG_INPUT Get_VOC_Value[5],_SKIP_;
+ANALOG_INPUT Get_CO2[5],_SKIP_;
+ANALOG_INPUT Get_Humidity[5],_SKIP_;
+ANALOG_INPUT Get_Temperature[5];
 
 DIGITAL_OUTPUT 	_SKIP_, _SKIP_;
-DIGITAL_OUTPUT Lights_Set[60]; // Pulses Output - Modify code below if different behavior is needed
-DIGITAL_OUTPUT Switch_Set[40]; // Pulse
-DIGITAL_OUTPUT GarageDoor_Set[4]; // Pulse
-DIGITAL_OUTPUT Alarm_Stay_Set[1], Alarm_Away_Set[1], Alarm_Night_Set[1], Alarm_Disarmed_Set[1], _SKIP_; // Pulse
-DIGITAL_OUTPUT SingleSpeedFan_Set[10]; // Pulse
-DIGITAL_OUTPUT _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_;
+DIGITAL_OUTPUT Lights_On[10],Lights_Off[10],_SKIP_; // Pulses Output - Modify code below if different behavior is needed 
+DIGITAL_OUTPUT Switch_On[10],Switch_Off[10],_SKIP_; // Pulse
 
-DIGITAL_OUTPUT Lock_Set[5];
-
-ANALOG_OUTPUT MultiSpeedFan_Set[6];  // See MultiSpeedFan_Status
-ANALOG_OUTPUT Shades_Set[6]; // See MultiSpeedFan_Status
+DIGITAL_OUTPUT Thermostat_On[2],Thermostat_Off[2],ThermostatFanSpeed_Low[2],ThermostatFanSpeed_Mid[2],ThermostatFanSpeed_High[2],
+ 			  Thermostat_Heat[2],Thermostat_Cool[2],Thermostat_Auto[2],_SKIP_;
+ 			  
+DIGITAL_OUTPUT AirPurifier_On[2],AirPurifier_Off[2],AirPurifier_Auto[2],AirPurifier_Manual[2],
+				AirPurifierFanSpeed_Low[2],AirPurifierFanSpeed_Mid[2],AirPurifierFanSpeed_High[2],_SKIP_;			    
+DIGITAL_OUTPUT _SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_
+				,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_
+				,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_
+				,_SKIP_,_SKIP_,_SKIP_;
+ANALOG_OUTPUT DimLight_Set[10],_SKIP_;
+ANALOG_OUTPUT Shades_Set[5],_SKIP_; // See MultiSpeedFan_Status
+ANALOG_OUTPUT Thermostat_SetTemperature[2],_SKIP_;//Temperature 16-32
 
 SIGNED_INTEGER doServerConnected;
 String InternalRxBuffer[65000];
@@ -79,7 +105,7 @@ function SocketTx(STRING ServerTx) {
     iStatus = SocketSend(MyServer, ServerTx);
 
     if (iStatus < 0) {
-		Print("Error Sending to MyServer: %d\n", iStatus);
+		//Print("Error Sending to MyServer: %d\n", iStatus);
     } else {
 		//Print("Sent %s\n", ServerTx);
 	}
@@ -97,9 +123,10 @@ function CmdParser(STRING ServerRx) {
 	STRING Cmd[100];
 	STRING Value[100];
 	INTEGER IDInt, ValueInt;
+	INTEGER pulseTime;
 	String returnvalue$[100];
   	INTEGER returnvalue;
-
+    INTEGER temp;
 
 	Service = REMOVE(":",ServerRx);
    	Service = LEFT(Service, (Len(Service)-1));
@@ -121,74 +148,283 @@ function CmdParser(STRING ServerRx) {
 	// set Cmd
 	//--------------------
 	if (Service="Lightbulb" && Cmd="setPowerState") {
-		// Toggle
-		if ((ValueInt=1 && Lights_Status[IDInt]=0) || (ValueInt=0 && Lights_Status[IDInt]=1)) { // Only pulse if light is off
-    		Pulse(1,Lights_Set[IDInt]);
+		// On Pulse
+		if (ValueInt=1 && Lights_Status[IDInt]=0) { // Only pulse if light is off
+    		Pulse(1,Lights_On[IDInt]);
+		}
+		// Off Pulse
+		if (ValueInt=0 && Lights_Status[IDInt]=1) { // Only pulse if light is on
+    		Pulse(1,Lights_Off[IDInt]);
+		}
+		
+	}
+	
+	if (Service="DimLightbulb" && Cmd="setLightBrightness") {
+		 
+	     returnvalue = ValueInt;
+		 if (returnvalue>=0) { 
+		 	if(returnvalue = 999)
+		 	{
+		 	   if (DimLight_Brightness[IDInt] = 0)
+		 	   {
+		 	      DimLight_Set[IDInt] = 65535;
+		 	   }
+		 	   else
+		 	   {
+		 	   	  
+		 	   	  //DimLight_Set[IDInt] = DimLight_Brightness[IDInt];			
+		 	   }
+		 	}
+		 	else
+		 	{
+		 		DimLight_Set[IDInt] = returnvalue*65535/100; //0 off, 1-100
+		 	}
+			
 		}
 	}
+	
+
 	if (Service="Switch" && Cmd="setPowerState") {
-		// Toggle
-		if ((ValueInt=1 && Switch_Status[IDInt]=0) || (ValueInt=0 && Switch_Status[IDInt]=1)) {
-			Pulse(1,Switch_Set[IDInt]);
+		// ON Pulse
+		if (ValueInt=1 && Switch_Status[IDInt]=0) {
+			Pulse(1,Switch_On[IDInt]);
+		}
+		// OFF pulse
+		if (ValueInt=0 && Switch_Status[IDInt]=1) {
+			Pulse(1,Switch_Off[IDInt]);
 		}
 	}
-    if (Service="SingleSpeedFan" && Cmd="setPowerState") {
-		// Toggle
-		if ((ValueInt=1 && SingleSpeedFan_Status[IDInt]=0) || (ValueInt=0 && SingleSpeedFan_Status[IDInt]=1)) {
-			Pulse(1,SingleSpeedFan_Set[IDInt]);
+
+    if (Service="AirPurifier" && Cmd="setAirPurifierPowerState") {
+		
+		// ON Pulse
+		if (ValueInt=1 && AirPurifier_OnStatus[IDInt]=0) {
+			Pulse(1,AirPurifier_On[IDInt]);
+		}
+		// OFF pulse         
+		if (ValueInt=0 && AirPurifier_OnStatus[IDInt]=1) {
+			Pulse(1,AirPurifier_Off[IDInt]);
 		}
 	}
-	if (Service="MultiSpeedFan" && Cmd="setRotationSpeed") {
-		if (ValueInt=0) {
-	    	returnvalue = 0;
-		} else if (ValueInt <= 25) {
-	        returnvalue = 1;
-		} else if (ValueInt <= 50) {
-	        returnvalue = 2;
-	    } else if (ValueInt <= 75) {
-	        returnvalue = 3;
-		} else if (ValueInt <= 100) {
-	        returnvalue = 4;
-		} else if (ValueInt = 999) {
-        	if (MultiSpeedFan_Status[IDInt]=0) { // if off, full speed
-				returnvalue = 4;
-			} else {
-            	returnvalue = -1; //otherwise current speed
-			}
-
+	if (Service="AirPurifier" && Cmd="setTargetAirPurifierState") {
+		
+		// Auto pulse
+		if (ValueInt=1 && AirPurifier_AutoStatus[IDInt]=0) {
+			Pulse(1,AirPurifier_Auto[IDInt]);
+		}
+		// Manual pulse         
+		if (ValueInt=0 && AirPurifier_AutoStatus[IDInt]=1) {
+			Pulse(1,AirPurifier_Manual[IDInt]);
+		}
+	}
+	if (Service="AirPurifier" && Cmd="setAirPurifierRotationSpeed") { 
+	
+		if (ValueInt <= 33) {                    
+		
+	        Pulse(1,AirPurifierFanSpeed_Low[IDInt]);
+	        
+		} else if (ValueInt <= 66) {                 
+		
+	        Pulse(1,AirPurifierFanSpeed_Mid[IDInt]);  
+	        
+	    } else if (ValueInt <= 100) {                
+	    
+	        Pulse(1,AirPurifierFanSpeed_High[IDInt]);
 		}
 
-		//Print("setRotationSpeed: %s %d %s %d %d %d\n", Service, IDInt, Cmd, ValueInt, returnvalue, MultiSpeedFan_Status[IDInt])
+	}
+  	
+    if (Service="WindowCovering" && Cmd="setTargetPosition"){
+        
+	     //0 -- 100
+	
+    	returnvalue = ValueInt;
+		
         if (returnvalue>=0) {
-			MultiSpeedFan_Set[IDInt] = returnvalue; //0 off, 1-4
+			Shades_Set[IDInt] = (100-returnvalue)*65535/100; //0 open, 1-100
 		}
 	}
-
-	if (Service="Lock" && Cmd="setLockTargetState") {
-		// Switch to discreet calls?
-		if ((ValueInt=1 && Lock_Status[IDInt]=0) || (ValueInt=0 && Lock_Status[IDInt]=1)) {
-			Pulse(1,Lock_Set[IDInt]);
-		}
+	
+	//because a bug, thermostat change to heatercooler
+    /*
+    if (Service="Thermostat" && Cmd="setTargetHeatingCoolingState") { 
+	    
+	    SWITCH(ValueInt)
+	    {
+	      CASE (0):
+	      {
+	        Pulse(1,Thermostat_Off[IDInt]);
+	      } 
+	      
+	      CASE (1):
+	      {
+	        if (Thermostat_OnStatus[IDInt] = 1) 
+	        { 
+	            Pulse(1,Thermostat_Heat[IDInt]);
+	        }
+	        else
+	        {
+	           Pulse(1,Thermostat_On[IDInt]);
+	      	   Pulse(1,Thermostat_Heat[IDInt]);
+	        }
+	      }  
+	      
+	      CASE (2):
+	      {
+	        if (Thermostat_OnStatus[IDInt] = 1) 
+	        { 
+	            Pulse(1,Thermostat_Cool[IDInt]);
+	        }
+	        else
+	        {
+	           	Pulse(1,Thermostat_On[IDInt]);
+	        	Pulse(1,Thermostat_Cool[IDInt]);
+	        }
+	      }  
+	      
+	      CASE (3):
+	      {
+	        if (Thermostat_OnStatus[IDInt] = 1) 
+	        { 
+	            Pulse(1,Thermostat_Auto[IDInt]);
+	        }
+	        else
+	        {
+	           	Pulse(1,Thermostat_On[IDInt]);
+	        	Pulse(1,Thermostat_Auto[IDInt]);
+	        }
+	      }
+	
+	      DEFAULT:
+	
+	        PRINT("Unknown command %d!\n", ValueInt);
+	
+	    }
+		
 	}
-
-	if (Service="GarageDoorOpener" && Cmd="setTargetDoorState") {
-		// Toggle
-		if ((ValueInt=1 && GarageDoor_Status[IDInt]=0) || (ValueInt=0 && GarageDoor_Status[IDInt]=1)) { // 0=open, 1=closed. Only open if garage door is closed.
-    		Pulse(2,GarageDoor_Set[IDInt]);
-		}
-	}
-    if (Service="SecuritySystem" && Cmd="setSecuritySystemTargetState") {
-		if (ValueInt=0) {
-        	Pulse(1,Alarm_Stay_Set[IDInt]);
-		} else if (ValueInt=1) {
-        	Pulse(1,Alarm_Away_Set[IDInt]);
-		} else if (ValueInt=2) {
-            Pulse(1,Alarm_Night_Set[IDInt]);
-		} else if (ValueInt=3) {
-            Pulse(1,Alarm_Disarmed_Set[IDInt]);
+	
+	if (Service="Thermostat" && Cmd="setTargetTemperature") { 
+        if (ValueInt<33 && ValueInt>15)
+        {
+       		returnvalue = ValueInt; 	
         }
+        else if(ValueInt<=15)
+        {
+        	returnvalue = 16;
+        }
+		else
+		{
+		    returnvalue = 32;
+		}		
+        if (returnvalue>=0) {
+			Thermostat_SetTemperature[IDInt] = returnvalue; //16-32 
+		}	
 	}
-
+	
+	if (Service="ThermostatFan" && Cmd="setRotationSpeed") {  
+	    if (Thermostat_OffStatus[IDInt] = 1)
+	    {
+	   		CmdBuilder("ThermostatFan", LtoA(IDInt), "eventRotationSpeed", "0"); 	
+	    }
+	    else
+	    {
+		    if (ValueInt <= 33 ) {
+		        Pulse(1,ThermostatFanSpeed_Low[IDInt]);
+		        CmdBuilder("ThermostatFan", LtoA(IDInt), "eventRotationSpeed", "33");
+			} else if (ValueInt <= 66 && ValueInt > 33) {
+		        Pulse(1,ThermostatFanSpeed_Mid[IDInt]);
+		        CmdBuilder("ThermostatFan", LtoA(IDInt), "eventRotationSpeed", "66");
+		    } else if (ValueInt <= 100 && ValueInt > 66) {
+		        Pulse(1,ThermostatFanSpeed_High[IDInt]);
+		        CmdBuilder("ThermostatFan", LtoA(IDInt), "eventRotationSpeed", "100");
+			}
+	    }
+	}*/ 
+	 
+	//POWER
+	if (Service="HeaterCooler" && Cmd="setHeaterCoolerPower") 
+	{  
+	    if (ValueInt = 1)
+	    {   
+	    	Pulse(1,Thermostat_On[IDInt]);
+	    }
+	    else
+	    {
+		    Pulse(1,Thermostat_Off[IDInt]);
+	    }
+	}
+	
+	//MODE
+	if (Service="HeaterCooler" && Cmd="setTargetHeaterCoolerState") { 
+	    
+	    SWITCH(ValueInt)
+	    {
+	    
+	      CASE (0): //AUTO
+	      {
+	       	    Pulse(1,Thermostat_Auto[IDInt]);	        
+	      } 
+	      
+	      CASE (1): //HEAT
+	      {
+	            Pulse(1,Thermostat_Heat[IDInt]);
+	      }  
+	      
+	      CASE (2): //COOL
+	      {
+	        	         
+	            Pulse(1,Thermostat_Cool[IDInt]); 
+	      }  
+	      	
+	      DEFAULT:
+	
+	        PRINT("Unknown command %d!\n", ValueInt);
+	
+	    }
+		
+	}
+	
+	// TEMPERATURE
+	if (Service="HeaterCooler" && Cmd="setTargetTemperature") 
+	{ 
+        if (ValueInt<33 && ValueInt>15)
+        {
+       		returnvalue = ValueInt; 	
+        }
+        else if(ValueInt<=15)
+        {
+        	returnvalue = 16;
+        }
+		else
+		{
+		    returnvalue = 32;
+		}		
+        if (returnvalue>=0) {
+			Thermostat_SetTemperature[IDInt] = returnvalue; //16-32 
+		}	
+	}
+	
+	//FAN
+	if (Service="HeaterCooler" && Cmd="setRotationSpeed") 
+	{  
+	    if (Thermostat_OffStatus[IDInt] = 1)
+	    {
+	   		CmdBuilder("HeaterCooler", LtoA(IDInt), "eventRotationSpeed", "0"); 	
+	    }
+	    else
+	    {
+		    if (ValueInt <= 33 ) {
+		        Pulse(1,ThermostatFanSpeed_Low[IDInt]);
+		        
+			} else if (ValueInt <= 66 && ValueInt > 33) {
+		        Pulse(1,ThermostatFanSpeed_Mid[IDInt]);
+		        
+		    } else if (ValueInt <= 100 && ValueInt > 66) {
+		        Pulse(1,ThermostatFanSpeed_High[IDInt]);
+		        
+			}
+	    }
+	}
     //--------------------
 	// get Cmd (requested by homebridge)
 	//--------------------
@@ -196,48 +432,225 @@ function CmdParser(STRING ServerRx) {
 	if (Service="Lightbulb" && Cmd="getPowerState") {
     	CmdBuilder("Lightbulb", ID, "getPowerState", LtoA(Lights_Status[IDInt]));
 	}
+	if (Service="DimLightbulb" && Cmd="getLightBrightness") { 
+		if (DimLight_Brightness[IDInt]=0) {
+	    	returnvalue$ = "0";
+		} else  {
+	        returnvalue$ = LtoA(DimLight_Brightness[IDInt]*100/65535);
+		}
+    	CmdBuilder("DimLightbulb", ID, "getLightBrightness", returnvalue$);
+	}
+	
 	if (Service="Switch" && Cmd="getPowerState") {
     	CmdBuilder("Switch", ID, "getPowerState", LtoA(Switch_Status[IDInt]));
 	}
 	if (Service="ContactSensor" && Cmd="getBinarySensorState") {
     	CmdBuilder("ContactSensor", ID, "getBinarySensorState", LtoA(ContactSensor_Status[IDInt]));
 	}
-	if (Service="Lock" && Cmd="getLockCurrentState") {
-    	CmdBuilder("Lock", ID, "getLockCurrentState", LtoA(Lock_Status[IDInt]));
+	if (Service="SmokeSensor" && Cmd="getSmokeDetected") {
+    	CmdBuilder("SmokeSensor", ID, "getSmokeDetected", LtoA(SmokeSensor_Status[IDInt]));
 	}
-	if (Service="SingleSpeedFan" && Cmd="getPowerState") {
-    	CmdBuilder("SingleSpeedFan", ID, "getPowerState", LtoA(SingleSpeedFan_Status[IDInt]));
+	if (Service="OccupancySensor" && Cmd="getOccupancyDetected") {
+    	CmdBuilder("OccupancySensor", ID, "getOccupancyDetected", LtoA(OccupancySensor_Status[IDInt]));
 	}
-    if (Service="MultiSpeedFan" && Cmd="getRotationSpeed") {
-		if (MultiSpeedFan_Status[IDInt]=0) {
-	    	returnvalue$ = "0";
-		} else if (MultiSpeedFan_Status[IDInt]=1) {
-	        returnvalue$ = "25";
-		} else if (MultiSpeedFan_Status[IDInt]=2) {
-	        returnvalue$ = "50";
-	    } else if (MultiSpeedFan_Status[IDInt]=3) {
-	        returnvalue$ = "75";
-		} else if (MultiSpeedFan_Status[IDInt]=4) {
+	if (Service="MotionSensor" && Cmd="getMotionDetected") {
+    	CmdBuilder("MotionSensor", ID, "getMotionDetected", LtoA(MotionSensor_Status[IDInt]));
+	}
+	if (Service="LeakSensor" && Cmd="getLeakDetected") {
+    	CmdBuilder("LeakSensor", ID, "getLeakDetected", LtoA(LeakSensor_Status[IDInt]));
+	}
+	if (Service="LightSensor" && Cmd="getCurrentAmbientLightLevel") {
+    	CmdBuilder("LightSensor", ID, "getCurrentAmbientLightLevel", LtoA(LightSensor_Status[IDInt]));
+	}
+ 
+	if (Service="WindowCovering" && Cmd="getCurrentPosition") {
+		if (Shades_Position[IDInt]<=100) {
+	    	returnvalue$ = LtoA(100-Shades_Position[IDInt]);
+		} else  {
+	        returnvalue$ = LtoA((100-Shades_Position[IDInt])*100/65535);
+		}
+		
+    	CmdBuilder("WindowCovering", ID, "getCurrentPosition", returnvalue$);
+	}   
+	
+	if (Service="AirPurifier" && Cmd="getFilterLifeLevel") {
+		if (AirPurifier_FilterMaintenance_Status[IDInt]<=100) {
+	    	returnvalue$ = LtoA(AirPurifier_FilterMaintenance_Status[IDInt]);
+		} else  {
+	        returnvalue$ = LtoA(AirPurifier_FilterMaintenance_Status[IDInt]*100/65535);
+		}
+		
+    	CmdBuilder("AirPurifier", ID, "getFilterLifeLevel", returnvalue$);
+	}
+	
+	if (Service="AirPurifier" && Cmd="getAirPurifierPowerState") {
+    	CmdBuilder("AirPurifier", ID, "getAirPurifierPowerState", LtoA(AirPurifier_OnStatus[IDInt]));
+	}
+	if (Service="AirPurifier" && Cmd="getTargetAirPurifierState") {
+    	CmdBuilder("AirPurifier", ID, "getTargetAirPurifierState", LtoA(AirPurifier_AutoStatus[IDInt]));
+	}
+	if (Service="AirPurifier" && Cmd="getAirPurifierRotationSpeed") {
+		if (AirPurifier_OnStatus[IDInt]=0) {
+	        returnvalue$ = "0";
+		} else if (AirPurifierFanSpeed_LowStatus[IDInt] = 1 ) {
+	        returnvalue$ = "33";
+		} else if (AirPurifierFanSpeed_MidStatus[IDInt] = 1 ) {
+	        returnvalue$ = "66";
+	    } else if (AirPurifierFanSpeed_HighStatus[IDInt] = 1 ) {
 	        returnvalue$ = "100";
+		} 
+    	CmdBuilder("AirPurifier", ID, "getAirPurifierRotationSpeed", returnvalue$);
+	}
+	
+	if (Service="AirQualitySensor" && Cmd="getPM2_5Value") {
+    	CmdBuilder("AirQualitySensor", ID, "getPM2_5Value", LtoA(Get_PM2_5Value[IDInt]));
+	}
+	if (Service="AirQualitySensor" && Cmd="getVOC_Value") {
+    	CmdBuilder("AirQualitySensor", ID, "getVOC_Value", LtoA(Get_VOC_Value[IDInt]));
+	}
+	if (Service="AirQualitySensor" && Cmd="getCarbonDioxideLevel") {
+    	CmdBuilder("AirQualitySensor", ID, "getCarbonDioxideLevel", LtoA(Get_CO2[IDInt]));
+	}
+	if (Service="CarbonDioxideSensor" && Cmd="getCarbonDioxideLevel") {
+    	CmdBuilder("CarbonDioxideSensor", ID, "getCarbonDioxideLevel", LtoA(Get_CO2[IDInt]));
+	}
+
+	if (Service="HumiditySensor" && Cmd="getCurrentRelativeHumidity") {
+    	CmdBuilder("HumiditySensor", ID, "getCurrentRelativeHumidity", LtoA(Get_Humidity[IDInt]));
+	}
+
+	if (Service="TemperatureSensor" && Cmd="getTempSensorCurrentTemperature") {
+    	CmdBuilder("TemperatureSensor", ID, "getTempSensorCurrentTemperature", LtoA(Get_Temperature[IDInt]));
+	}
+    
+    /*		
+    if (Service="ThermostatFan" && Cmd="getRotationSpeed") {
+    	if (Thermostat_OffStatus[IDInt] = 1)
+    	{   
+    		returnvalue$ = "0";    	
+    	} 
+    	else
+    	{
+    	  if (ThermostatFanSpeed_LowStatus[IDInt]=1) 
+    	  	{
+		    	returnvalue$ = "33";
+			} else if (ThermostatFanSpeed_MidStatus[IDInt]=1) {
+		        returnvalue$ = "66";
+			} else if (ThermostatFanSpeed_HighStatus[IDInt]=1) {
+		        returnvalue$ = "100";
+		    }
+    	}
+			 
+	    CmdBuilder("ThermostatFan", ID, "getRotationSpeed", returnvalue$);
+	}
+
+	if (Service="Thermostat" && Cmd="getTargetHeatingCoolingState") {
+		if (Thermostat_OffStatus[IDInt]=1) {
+	        returnvalue$ = "0";
+		} else 
+		{
+			if (Thermostat_HeatStatus[IDInt] = 1) {
+	       		returnvalue$ = "1";
+			} else if (Thermostat_CoolStatus[IDInt] = 1) {
+	       		returnvalue$ = "2";
+	    	} else {
+	        	returnvalue$ = "3";
+			}
 		}
-    	CmdBuilder("MultiSpeedFan", ID, "getRotationSpeed", returnvalue$);
+    	CmdBuilder("Thermostat", ID, "getTargetHeatingCoolingState", returnvalue$);
 	}
-	if (Service="GarageDoorOpener" && Cmd="getCurrentDoorState") {
-    	CmdBuilder("GarageDoorOpener", ID, "getCurrentDoorState", LtoA(GarageDoor_Status[IDInt]));
-	}
-	if (Service="SecuritySystem" && Cmd="getSecuritySystemCurrentState") {
-        If (Alarm_Stay[IDInt]=1) {
-        	CmdBuilder("SecuritySystem", ID, "getSecuritySystemCurrentState", "0");
-		} else if (Alarm_Away[IDInt]=1) {
-            CmdBuilder("SecuritySystem", ID, "getSecuritySystemCurrentState", "1");
-		} else if (Alarm_Night[IDInt]=1) {
-            CmdBuilder("SecuritySystem", ID, "getSecuritySystemCurrentState", "2");
-		} else if (Alarm_Disarmed[IDInt]=1) {
-            CmdBuilder("SecuritySystem", ID, "getSecuritySystemCurrentState", "3");
-		} else if (Alarm_Triggered[IDInt]=1) {
-            CmdBuilder("SecuritySystem", ID, "getSecuritySystemCurrentState", "4");
+	
+	if (Service="Thermostat" && Cmd="getTargetTemperature") 
+	{
+		if (Thermostat_GetTargetTemperature[IDInt]>=16 && Thermostat_GetTargetTemperature[IDInt]<=32) {
+	    	returnvalue$ = LtoA(Thermostat_GetTargetTemperature[IDInt]);
+		} else  {
+	        returnvalue$ = "24";//default number
 		}
+    	CmdBuilder("Thermostat", ID, "getTargetTemperature", returnvalue$);
 	}
+	
+	
+	if (Service="Thermostat" && Cmd="getCurrentTemperature") {
+		if (Thermostat_GetCurrentTemperature[IDInt]>=16 && Thermostat_GetCurrentTemperature[IDInt]<=32) {
+	    	returnvalue$ = LtoA(Thermostat_GetCurrentTemperature[IDInt]);
+		} else  {
+	        returnvalue$ = "24";//default number. if temperature does not belong 16-32,the number will Reset 24
+		}
+    	CmdBuilder("Thermostat", ID, "getCurrentTemperature", returnvalue$);
+	}*/
+	
+	if (Service="HeaterCooler" && Cmd="getHeaterCoolerPower") {
+    	if (Thermostat_OffStatus[IDInt] = 1)
+    	{   
+    		returnvalue$ = "0";    	
+    	} 
+    	else
+    	{
+    	    returnvalue$ = "1";
+    	}
+			 
+	    CmdBuilder("HeaterCooler", ID, "getHeaterCoolerPower", returnvalue$);
+	}
+	
+	if (Service="HeaterCooler" && Cmd="getRotationSpeed") {
+    	if (Thermostat_OffStatus[IDInt] = 1)
+    	{   
+    		returnvalue$ = "0";    	
+    	} 
+    	else
+    	{
+    	  if (ThermostatFanSpeed_LowStatus[IDInt]=1) 
+    	  	{
+		    	returnvalue$ = "33";
+			} else if (ThermostatFanSpeed_MidStatus[IDInt]=1) {
+		        returnvalue$ = "66";
+			} else if (ThermostatFanSpeed_HighStatus[IDInt]=1) {
+		        returnvalue$ = "100";
+		    }
+    	}
+			 
+	    CmdBuilder("HeaterCooler", ID, "getRotationSpeed", returnvalue$);
+	}
+
+	if (Service="HeaterCooler" && Cmd="getTargetHeaterCoolerState") {
+		if (Thermostat_OffStatus[IDInt]=1) {
+	        returnvalue$ = "0";
+		} 
+		else 
+		{
+			if (Thermostat_HeatStatus[IDInt] = 1) {
+	       		returnvalue$ = "1";
+			} else if (Thermostat_CoolStatus[IDInt] = 1) {
+	       		returnvalue$ = "2";
+	    	} else {
+	        	returnvalue$ = "0";
+			}
+		}
+    	CmdBuilder("HeaterCooler", ID, "getTargetHeaterCoolerState", returnvalue$);
+	}
+	
+	if (Service="HeaterCooler" && Cmd="getTargetTemperature") 
+	{
+		if (Thermostat_GetTargetTemperature[IDInt]>=16 && Thermostat_GetTargetTemperature[IDInt]<=32) {
+	    	returnvalue$ = LtoA(Thermostat_GetTargetTemperature[IDInt]);
+		} else  {
+	        returnvalue$ = "24";//default number
+		}
+    	CmdBuilder("HeaterCooler", ID, "getTargetTemperature", returnvalue$);
+	}
+	
+	
+	if (Service="HeaterCooler" && Cmd="getCurrentTemperature") {
+		if (Thermostat_GetCurrentTemperature[IDInt]>=16 && Thermostat_GetCurrentTemperature[IDInt]<=32) {
+	    	returnvalue$ = LtoA(Thermostat_GetCurrentTemperature[IDInt]);
+		} else  {
+	        returnvalue$ = "24";	//default number. if temperature does not belong 16-32,the number will Reset 24
+		}
+    	CmdBuilder("HeaterCooler", ID, "getCurrentTemperature", returnvalue$);
+	}
+
+		
 }
 
 function SocketRx() {
@@ -265,71 +678,483 @@ CHANGE Switch_Status {
 	ID = GetLastModifiedArrayIndex();
 	CmdBuilder("Switch", LtoA(ID), "eventPowerState", LtoA(Switch_Status[ID]));
 }
-CHANGE GarageDoor_Status {
-	INTEGER ID;
-	ID = GetLastModifiedArrayIndex();
-	CmdBuilder("GarageDoorOpener", LtoA(ID), "eventCurrentDoorState", LtoA(GarageDoor_Status[ID]));
-}
-CHANGE SingleSpeedFan_Status {
-	INTEGER ID;
-	ID = GetLastModifiedArrayIndex();
-	CmdBuilder("SingleSpeedFan", LtoA(ID), "eventPowerState", LtoA(Switch_Status[ID]));
-}
+
 CHANGE ContactSensor_Status {
 	INTEGER ID;
 	ID = GetLastModifiedArrayIndex();
 	CmdBuilder("ContactSensor", LtoA(ID), "eventBinarySensorState", LtoA(ContactSensor_Status[ID]));
 }
-CHANGE Lock_Status {
+CHANGE SmokeSensor_Status {
 	INTEGER ID;
 	ID = GetLastModifiedArrayIndex();
-	CmdBuilder("Lock", LtoA(ID), "eventLockCurrentState", LtoA(Lock_Status[ID]));
+	CmdBuilder("SmokeSensor", LtoA(ID), "eventSmokeDetected", LtoA(SmokeSensor_Status[ID]));
 }
-PUSH Alarm_Stay {
+CHANGE OccupancySensor_Status {
 	INTEGER ID;
 	ID = GetLastModifiedArrayIndex();
-	CmdBuilder("SecuritySystem", LtoA(ID), "eventSecuritySystemCurrentState", "0");
+	CmdBuilder("OccupancySensor", LtoA(ID), "eventOccupancyDetected", LtoA(OccupancySensor_Status[ID]));
 }
-PUSH Alarm_Away {
+CHANGE MotionSensor_Status {
 	INTEGER ID;
 	ID = GetLastModifiedArrayIndex();
-	CmdBuilder("SecuritySystem", LtoA(ID), "eventSecuritySystemCurrentState", "1");
+	CmdBuilder("MotionSensor", LtoA(ID), "eventMotionDetected", LtoA(MotionSensor_Status[ID]));
 }
-PUSH Alarm_Night {
+CHANGE LeakSensor_Status {
 	INTEGER ID;
 	ID = GetLastModifiedArrayIndex();
-	CmdBuilder("SecuritySystem", LtoA(ID), "eventSecuritySystemCurrentState", "2");
+	CmdBuilder("LeakSensor", LtoA(ID), "eventLeakDetected", LtoA(LeakSensor_Status[ID]));
 }
-PUSH Alarm_Disarmed {
+CHANGE LightSensor_Status {
 	INTEGER ID;
 	ID = GetLastModifiedArrayIndex();
-	CmdBuilder("SecuritySystem", LtoA(ID), "eventSecuritySystemCurrentState", "3");
+	CmdBuilder("LightSensor", LtoA(ID), "eventCurrentAmbientLightLevel", LtoA(LightSensor_Status[ID]));
 }
-PUSH Alarm_Triggered {
-	INTEGER ID;
-	ID = GetLastModifiedArrayIndex();
-	CmdBuilder("SecuritySystem", LtoA(ID), "eventSecuritySystemCurrentState", "4");
-}
-CHANGE MultiSpeedFan_Status {
+
+CHANGE Shades_Position {
 	INTEGER ID;
 	String returnvalue[3];
 	ID = GetLastModifiedArrayIndex();
 
-    if (MultiSpeedFan_Status[ID]=0) {
-    	returnvalue = "0";
-	} else if (MultiSpeedFan_Status[ID]=1) {
-        returnvalue = "25";
-	} else if (MultiSpeedFan_Status[ID]=2) {
-        returnvalue = "50";
-    } else if (MultiSpeedFan_Status[ID]=3) {
-        returnvalue = "75";
-	} else if (MultiSpeedFan_Status[ID]=4) {
-        returnvalue = "100";
+    if (Shades_Position[ID]<=100) {
+    	returnvalue = LtoA(100-Shades_Position[ID]);
+	} else {
+		returnvalue = LtoA((100-Shades_Position[ID])*100/65535); 
 	}
-
-	CmdBuilder("MultiSpeedFan", LtoA(ID), "eventRotationSpeed", returnvalue);
+	CmdBuilder("WindowCovering", LtoA(ID), "eventCurrentPosition", returnvalue);
+}
+CHANGE DimLight_Brightness {
+	INTEGER ID;   
+	String returnvalue[3];
+	ID = GetLastModifiedArrayIndex();
+    if (DimLight_Brightness[ID]<=100) {
+    	returnvalue = LtoA(DimLight_Brightness[ID]);
+	} else {
+		returnvalue = LtoA(DimLight_Brightness[ID]*100/65535); 
+	}			
+	CmdBuilder("DimLightbulb", LtoA(ID), "eventLightBrightness", returnvalue);
 }
 
+/*
+//  update Thermostat status
+CHANGE Thermostat_OffStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	if (Thermostat_OffStatus[ID] = 1)
+	{
+	   CmdBuilder("Thermostat", LtoA(ID), "eventTargetHeatingCoolingState", "0");
+	   CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "0");
+	}  
+	else 
+	{
+		if (Thermostat_HeatStatus[ID] = 1 )
+		{
+		    CmdBuilder("Thermostat", LtoA(ID), "eventTargetHeatingCoolingState", "1");
+		    if (ThermostatFanSpeed_LowStatus[ID] = 1)
+		    {
+		        CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "33");
+		    } else if (ThermostatFanSpeed_MidStatus[ID] = 1)
+		    {
+		    	CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "66");	
+		    } else 
+		    {
+		    	CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "100");	
+		    }
+		}
+		else if (Thermostat_CoolStatus[ID] = 1)
+		{
+		    CmdBuilder("Thermostat", LtoA(ID), "eventTargetHeatingCoolingState", "2");
+		    if (ThermostatFanSpeed_LowStatus[ID] = 1)
+		    {
+		        CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "33");
+		    } else if (ThermostatFanSpeed_MidStatus[ID] = 1)
+		    {
+		    	CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "66");	
+		    } else 
+		    {
+		    	CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "100");	
+		    }
+		}
+		else
+		{
+		    CmdBuilder("Thermostat", LtoA(ID), "eventTargetHeatingCoolingState", "3");
+		    if (ThermostatFanSpeed_LowStatus[ID] = 1)
+		    {
+		        CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "33");
+		    } else if (ThermostatFanSpeed_MidStatus[ID] = 1)
+		    {
+		    	CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "66");	
+		    } else 
+		    {
+		    	CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "100");	
+		    }
+		}
+	}	
+}
+
+PUSH ThermostatFanSpeed_LowStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	if(Thermostat_OffStatus[ID] = 1 )
+	{
+	 	CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "0");
+	}
+	else
+	{
+		CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "33");
+	}	
+}
+PUSH ThermostatFanSpeed_MidStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	if(Thermostat_OffStatus[ID] = 1 )
+	{
+	 	CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "0");
+	}
+	else
+	{
+		CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "66");
+	}
+}
+PUSH ThermostatFanSpeed_HighStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	if(Thermostat_OffStatus[ID] = 1 )
+	{
+	 	CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "0");
+	}
+	else
+	{
+		CmdBuilder("ThermostatFan", LtoA(ID), "eventRotationSpeed", "100");
+	}
+}
+PUSH Thermostat_HeatStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	if(Thermostat_OffStatus[ID] = 1 )
+	{
+	 CmdBuilder("Thermostat", LtoA(ID), "eventTargetHeatingCoolingState", "0");
+	}
+	else
+	{
+	  CmdBuilder("Thermostat", LtoA(ID), "eventTargetHeatingCoolingState", "1");
+	} 	
+}
+PUSH Thermostat_CoolStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	if(Thermostat_OffStatus[ID] = 1 )
+	{
+	 CmdBuilder("Thermostat", LtoA(ID), "eventTargetHeatingCoolingState", "0");
+	}
+	else
+	{
+	  CmdBuilder("Thermostat", LtoA(ID), "eventTargetHeatingCoolingState", "2");
+	}
+}
+PUSH Thermostat_AutoStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	if(Thermostat_OffStatus[ID] = 1 )
+	{
+	  CmdBuilder("Thermostat", LtoA(ID), "eventTargetHeatingCoolingState", "0");
+	}
+	else
+	{
+	  CmdBuilder("Thermostat", LtoA(ID), "eventTargetHeatingCoolingState", "3");
+	}
+}
+
+
+CHANGE Thermostat_GetCurrentTemperature{
+	INTEGER ID;
+	String returnvalue[3];
+	ID = GetLastModifiedArrayIndex();
+
+    if (Thermostat_GetCurrentTemperature[ID]>=16 && Thermostat_GetCurrentTemperature[ID]<=32) {
+    	returnvalue = LtoA(Thermostat_GetCurrentTemperature[ID]);
+	} else {
+		returnvalue = "24";//if number error the number will reset 24
+	}
+	CmdBuilder("Thermostat", LtoA(ID), "eventCurrentTemperature", returnvalue);  
+}
+
+CHANGE Thermostat_GetTargetTemperature{
+	INTEGER ID;
+	String returnvalue[3];
+	ID = GetLastModifiedArrayIndex();
+
+    if (Thermostat_GetTargetTemperature[ID]>=16 && Thermostat_GetTargetTemperature[ID]<=32) {
+    	returnvalue = LtoA(Thermostat_GetTargetTemperature[ID]);
+	} else {
+		returnvalue = "24";//if number error the number will reset 24
+	}
+	CmdBuilder("Thermostat", LtoA(ID), "eventTargetTemperature", returnvalue);  
+}*/
+
+CHANGE Thermostat_OffStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	if (Thermostat_OffStatus[ID] = 1)
+	{
+	   CmdBuilder("HeaterCooler", LtoA(ID), "eventHeaterCoolerPower", "0");
+	   CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "0");
+	}  
+	else 
+	{
+		if (Thermostat_HeatStatus[ID] = 1 )
+		{
+		    CmdBuilder("HeaterCooler", LtoA(ID), "eventTargetHeaterCoolerState", "1");
+		    if (ThermostatFanSpeed_LowStatus[ID] = 1)
+		    {
+		        CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "33");
+		    } else if (ThermostatFanSpeed_MidStatus[ID] = 1)
+		    {
+		    	CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "66");	
+		    } else 
+		    {
+		    	CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "100");	
+		    }
+		}
+		else if (Thermostat_CoolStatus[ID] = 1)
+		{
+		    CmdBuilder("HeaterCooler", LtoA(ID), "eventTargetHeaterCoolerState", "2");
+		    if (ThermostatFanSpeed_LowStatus[ID] = 1)
+		    {
+		        CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "33");
+		    } else if (ThermostatFanSpeed_MidStatus[ID] = 1)
+		    {
+		    	CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "66");	
+		    } else 
+		    {
+		    	CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "100");	
+		    }
+		}
+		else
+		{
+		    CmdBuilder("HeaterCooler", LtoA(ID), "eventTargetHeaterCoolerState", "0");
+		    if (ThermostatFanSpeed_LowStatus[ID] = 1)
+		    {
+		        CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "33");
+		    } else if (ThermostatFanSpeed_MidStatus[ID] = 1)
+		    {
+		    	CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "66");	
+		    } else 
+		    {
+		    	CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "100");	
+		    }
+		}
+	}	
+}
+
+PUSH ThermostatFanSpeed_LowStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "33");
+		
+}
+PUSH ThermostatFanSpeed_MidStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();		 	
+	CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "66");
+	
+}
+PUSH ThermostatFanSpeed_HighStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();		
+	CmdBuilder("HeaterCooler", LtoA(ID), "eventRotationSpeed", "100");
+	
+}
+PUSH Thermostat_HeatStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	if(Thermostat_OffStatus[ID] = 1 )
+	{
+	 CmdBuilder("HeaterCooler", LtoA(ID), "eventHeaterCoolerPower", "0");
+	}
+	else
+	{
+	  CmdBuilder("HeaterCooler", LtoA(ID), "eventTargetHeaterCoolerState", "1");
+	} 	
+}
+PUSH Thermostat_CoolStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	if(Thermostat_OffStatus[ID] = 1 )
+	{
+	 CmdBuilder("HeaterCooler", LtoA(ID), "eventHeaterCoolerPower", "0");
+	}
+	else
+	{
+	  CmdBuilder("HeaterCooler", LtoA(ID), "eventTargetHeaterCoolerState", "2");
+	}
+}
+PUSH Thermostat_AutoStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	if(Thermostat_OffStatus[ID] = 1 )
+	{
+	  CmdBuilder("HeaterCooler", LtoA(ID), "eventHeaterCoolerPower", "0");
+	}
+	else
+	{
+	  CmdBuilder("HeaterCooler", LtoA(ID), "eventTargetHeaterCoolerState", "0");
+	}
+}
+
+
+CHANGE Thermostat_GetCurrentTemperature{
+	INTEGER ID;
+	String returnvalue[3];
+	ID = GetLastModifiedArrayIndex();
+
+    if (Thermostat_GetCurrentTemperature[ID]>=16 && Thermostat_GetCurrentTemperature[ID]<=32) {
+    	returnvalue = LtoA(Thermostat_GetCurrentTemperature[ID]);
+	} else {
+		returnvalue = "24";//if number error the number will reset 24
+	}
+	CmdBuilder("HeaterCooler", LtoA(ID), "eventCurrentTemperature", returnvalue);  
+}
+
+CHANGE Thermostat_GetTargetTemperature{
+	INTEGER ID;
+	String returnvalue[3];
+	ID = GetLastModifiedArrayIndex();
+
+    if (Thermostat_GetTargetTemperature[ID]>=16 && Thermostat_GetTargetTemperature[ID]<=32) {
+    	returnvalue = LtoA(Thermostat_GetTargetTemperature[ID]);
+	} else {
+		returnvalue = "24";//if number error the number will reset 24
+	}
+	CmdBuilder("HeaterCooler", LtoA(ID), "eventTargetTemperature", returnvalue);  
+} 
+  
+CHANGE AirPurifier_FilterMaintenance_Status {
+	INTEGER ID;
+	String returnvalue[3];
+	ID = GetLastModifiedArrayIndex();
+
+    if (AirPurifier_FilterMaintenance_Status[ID]<=100) {
+    	returnvalue = LtoA(AirPurifier_FilterMaintenance_Status[ID]);
+	} else {
+		returnvalue = LtoA(AirPurifier_FilterMaintenance_Status[ID]*100/65535); 
+	}
+	CmdBuilder("AirPurifier", LtoA(ID), "eventFilterLifeLevel", returnvalue);
+}
+
+CHANGE AirPurifier_OnStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	
+	if (AirPurifier_OnStatus[ID] = 1)
+	{
+		CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierPowerState", "1");
+		if(AirPurifier_AutoStatus[ID] = 1)
+		{
+			CmdBuilder("AirPurifier", LtoA(ID), "eventTargetAirPurifierState", "1");
+			if (AirPurifierFanSpeed_LowStatus[ID] = 1)
+			{
+				CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierRotationSpeed", "33");
+			}
+			else if (AirPurifierFanSpeed_MidStatus[ID] = 1)
+			{
+				CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierRotationSpeed", "66");
+			}
+			else if (AirPurifierFanSpeed_HighStatus[ID] = 1)
+			{
+				CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierRotationSpeed", "100");
+			} else
+			{
+			    CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierRotationSpeed", "0");
+			}	
+		}  
+		else
+		{
+			CmdBuilder("AirPurifier", LtoA(ID), "eventTargetAirPurifierState", "0");
+			if (AirPurifierFanSpeed_LowStatus[ID] = 1)
+			{
+				CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierRotationSpeed", "33");
+			}
+			else if (AirPurifierFanSpeed_MidStatus[ID] = 1)
+			{
+				CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierRotationSpeed", "66");
+			}
+			else if (AirPurifierFanSpeed_HighStatus[ID] = 1)
+			{
+				CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierRotationSpeed", "100");
+			} else
+			{
+			    CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierRotationSpeed", "0");
+			}	
+	
+		}
+	}
+	if (AirPurifier_OnStatus[ID] = 0)
+	{
+		CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierPowerState", "0");
+		wait(5);
+		CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierRotationSpeed", "0");
+	}
+}
+
+PUSH AirPurifier_AutoStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("AirPurifier", LtoA(ID), "eventTargetAirPurifierState", "1");
+}
+
+PUSH AirPurifier_ManualStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("AirPurifier", LtoA(ID), "eventTargetAirPurifierState", "0");
+}   
+
+PUSH AirPurifierFanSpeed_LowStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierRotationSpeed", "33");
+}
+PUSH AirPurifierFanSpeed_MidStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierRotationSpeed", "66");
+}
+PUSH AirPurifierFanSpeed_HighStatus {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("AirPurifier", LtoA(ID), "eventAirPurifierRotationSpeed", "100");
+}     
+    
+     
+
+CHANGE Get_PM2_5Value {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("AirQualitySensor", LtoA(ID), "eventPM2_5Value", LtoA(Get_PM2_5Value[ID]));
+}   
+
+CHANGE Get_VOC_Value {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("AirQualitySensor", LtoA(ID), "eventVOC_Value", LtoA(Get_VOC_Value[ID]));
+}     
+
+CHANGE Get_CO2 {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("AirQualitySensor", LtoA(ID), "eventCarbonDioxideLevel", LtoA(Get_CO2[ID]));
+}     
+
+CHANGE Get_Humidity {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("HumiditySensor", LtoA(ID), "eventCurrentRelativeHumidity", LtoA(Get_Humidity[ID]));
+}      
+
+CHANGE Get_Temperature {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("TemperatureSensor", LtoA(ID), "eventTempSensorCurrentTemperature", LtoA(Get_Temperature[ID]));
+}  
 
 //----------------
 //SOCKET FUNCTIONS
