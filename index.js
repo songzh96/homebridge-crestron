@@ -1181,7 +1181,8 @@ CresKitAccessory.prototype = {
                     
                     //PositionState.updateValue(state_value);
                     TargetPosition.updateValue(value);
-                    CurrentPosition.updateValue(value);
+                    setTimeout("CurrentPosition.updateValue(value)","3000");
+                    
                                      
                 }.bind(this));
 
