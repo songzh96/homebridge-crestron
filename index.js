@@ -1179,9 +1179,9 @@ CresKitAccessory.prototype = {
                 // Register a listener for event changes
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentPosition", function(value) {
                     
-                    //PositionState.updateValue(state_value);
+                    PositionState.updateValue(state_value);
                     TargetPosition.updateValue(value);
-                    setTimeout("CurrentPosition.updateValue(value)","3000");
+                    
                     
                                      
                 }.bind(this));
