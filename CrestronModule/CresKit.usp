@@ -24,6 +24,8 @@ STRING_PARAMETER IPAddr$[16];
 INTEGER_PARAMETER Port;
 
 DIGITAL_INPUT 	_SKIP_, _SKIP_;
+DIGITAL_INPUT TV_Power_Status[10],_SKIP_;
+DIGITAL_INPUT _SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_;
 DIGITAL_INPUT Lights_Status[10],_SKIP_; // Feedback for Lights 
 DIGITAL_INPUT _SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_;
 DIGITAL_INPUT Switch_Status[10],_SKIP_; // Feedback for Switch/Scenes 
@@ -58,6 +60,7 @@ ANALOG_INPUT Get_Humidity[5],_SKIP_;
 ANALOG_INPUT Get_Temperature[5];
 
 DIGITAL_OUTPUT 	_SKIP_, _SKIP_;
+DIGITAL_OUTPUT TV_On[10],TV_Off[10],_SKIP_;
 DIGITAL_OUTPUT Lights_On[10],Lights_Off[10],_SKIP_; // Pulses Output - Modify code below if different behavior is needed 
 DIGITAL_OUTPUT Switch_On[10],Switch_Off[10],_SKIP_; // Pulse
 
@@ -194,6 +197,18 @@ function CmdParser(STRING ServerRx) {
 			Pulse(1,Switch_Off[IDInt]);
 		}
 	}
+
+	if (Service="TV" && Cmd="setPowerState") {
+		// ON Pulse
+		if (ValueInt=1 && TV_Power_Status[IDInt]=0) {
+			Pulse(1,TV_On[IDInt]);
+		}
+		// OFF pulse
+		if (ValueInt=0 && TV_Power_Status[IDInt]=1) {
+			Pulse(1,TV_Off[IDInt]);
+		}
+	}
+
 
     if (Service="AirPurifier" && Cmd="setAirPurifierPowerState") {
 		
@@ -444,6 +459,9 @@ function CmdParser(STRING ServerRx) {
 	if (Service="Switch" && Cmd="getPowerState") {
     	CmdBuilder("Switch", ID, "getPowerState", LtoA(Switch_Status[IDInt]));
 	}
+	if (Service="TV" && Cmd="getPowerState") {
+    	CmdBuilder("TV", ID, "getPowerState", LtoA(TV_Power_Status[IDInt]));
+	}
 	if (Service="ContactSensor" && Cmd="getBinarySensorState") {
     	CmdBuilder("ContactSensor", ID, "getBinarySensorState", LtoA(ContactSensor_Status[IDInt]));
 	}
@@ -678,7 +696,10 @@ CHANGE Switch_Status {
 	ID = GetLastModifiedArrayIndex();
 	CmdBuilder("Switch", LtoA(ID), "eventPowerState", LtoA(Switch_Status[ID]));
 }
-
+CHANGE TV_POWER_STATUS {
+	INTEGER ID;
+	CmdBuilder("TV", LtoA(ID), "eventPowerState", LtoA(TV_Power_Status[ID]));
+}
 CHANGE ContactSensor_Status {
 	INTEGER ID;
 	ID = GetLastModifiedArrayIndex();
