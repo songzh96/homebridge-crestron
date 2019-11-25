@@ -211,15 +211,15 @@ CresKitAccessory.prototype = {
         //this.log("cresKitSocket.write" + (this.config.type + ":" + this.id + ":setLightBrightness:" + value + "*"));
         callback();
     },
-    
+
     setLightState: function(value, callback) {
 
         if (value) {
             cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:999*");
-            
-        } else  { 
+
+        } else  {
             cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:0*");
-            
+
             //cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:" + value + "*"); //65536 = 100 if off, otherwise leave current
         }
 
@@ -364,7 +364,7 @@ CresKitAccessory.prototype = {
                 //this.log("cresKitSocket.write("+this.config.type + ":" + this.id + ":setRotationSpeed:0*");
             }
             if (value == 1) {
-            
+
                 //cresKitSocket.write(this.config.type + ":" + this.id + ":setRotationSpeed:999*"); //999 = 100 if off, otherwise leave current
                 //this.log("cresKitSocket.write("+this.config.type + ":" + this.id + ":setRotationSpeed:999*");
             }
@@ -421,7 +421,7 @@ CresKitAccessory.prototype = {
     },
 
     setTargetHeatingCoolingState: function (value, callback) {
-        //AUTO  = 0;, HEAT  = 1; COOL  = 2; 
+        //AUTO  = 0;, HEAT  = 1; COOL  = 2;
         cresKitSocket.write(this.config.type + ":" + this.id + ":setTargetHeatingCoolingState:" + value + "*");
         //this.log("cresKitSocket.write(" + this.config.type + ":" + this.id + ":setTargetHeatingCoolingState:" + value + "*");
         callback();
@@ -515,7 +515,7 @@ CresKitAccessory.prototype = {
     },
 
     setTargetHeaterCoolerState: function (value, callback) {
-        //AUTO  = 0;, HEAT  = 1; COOL  = 2; 
+        //AUTO  = 0;, HEAT  = 1; COOL  = 2;
         cresKitSocket.write(this.config.type + ":" + this.id + ":setTargetHeaterCoolerState:" + value + "*");
         //this.log("cresKitSocket.write(" + this.config.type + ":" + this.id + ":setTargetHeatingCoolingState:" + value + "*");
         callback();
@@ -602,7 +602,7 @@ CresKitAccessory.prototype = {
     },
 
     setAirPurifierPowerState: function (value, callback) {
-        //OFF = 0; ON = 1; 
+        //OFF = 0; ON = 1;
         cresKitSocket.write(this.config.type + ":" + this.id + ":setAirPurifierPowerState:" + value + "*");
         //this.log("cresKitSocket.write(" + this.config.type + ":" + this.id + ":setAirPurifierPowerState:" + value + "*");
         callback();
@@ -871,7 +871,7 @@ CresKitAccessory.prototype = {
         //INACTIVE = 0; ACTIVE  = 1;
         cresKitSocket.write(this.config.type + ":" + this.id + ":setFaucetActive:" + value + "*");
         //this.log("cresKitSocket.write(" + this.config.type + ":" + this.id + ":setFaucetActive:" + value + "*");
-        
+
         callback();
     },
 
@@ -900,7 +900,7 @@ CresKitAccessory.prototype = {
 
         cresKitSocket.write(this.config.type + ":" + this.id + ":setTargetPosition:" + value + "*");
         //this.log("cresKitSocket.write(" + this.config.type + ":" + this.id + ":setTargetPosition:" + value + "*");
-        
+
         callback();
     },
 
@@ -929,7 +929,7 @@ CresKitAccessory.prototype = {
 
         cresKitSocket.write(this.config.type + ":" + this.id + ":setOutletPower:" + value + "*");
         //this.log("cresKitSocket.write(" + this.config.type + ":" + this.id + ":setOutletPower:" + value + "*");
-        
+
         callback();
     },
 
@@ -956,7 +956,7 @@ CresKitAccessory.prototype = {
     setValveActive: function (value, callback) {
         //ON = 1; OFF = 0
 
-            cresKitSocket.write(this.config.type + ":" + this.id + ":setValveActive:" + value + "*");        
+            cresKitSocket.write(this.config.type + ":" + this.id + ":setValveActive:" + value + "*");
         callback();
     },
     //---------------
@@ -990,7 +990,7 @@ CresKitAccessory.prototype = {
         eventEmitter.once(this.config.type + ":" + this.id + ":getVolume", function(value) {
             try {
                 closeGetStatus(this.config.type + ":" + this.id + ":getVolume:*");
-                // Update LeakDetected via event 
+                // Update LeakDetected via event
                 eventEmitter.emit(this.config.type + ":" + this.id + ":eventVolume", value);
 
                 callback( null, value);
@@ -1001,6 +1001,7 @@ CresKitAccessory.prototype = {
     },
     setVolume: function (value, callback) {
         //ON = 1; OFF = 0
+        console.log(value);
         if (fromEventCheck(this.config.type + ":" + this.id + ":eventVolume:" + value) == false) {
             cresKitSocket.write(this.config.type + ":" + this.id + ":setVolume:" + value + "*");
             //this.log("cresKitSocket.write(" + this.config.type + ":" + this.id + ":setVolume:" + value + "*");
@@ -1012,7 +1013,7 @@ CresKitAccessory.prototype = {
     //---------------
     getServices: function() {
         var services = []
-        
+
         var informationService = new Service.AccessoryInformation();
         informationService
             .setCharacteristic(Characteristic.Manufacturer, "CresKit")
@@ -1030,7 +1031,7 @@ CresKitAccessory.prototype = {
 
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventPowerState", function(value) {
-    
+
                     PowerState.updateValue(value);
                 }.bind(this));
 
@@ -1043,12 +1044,12 @@ CresKitAccessory.prototype = {
                 var LightState = DimLightbulbService
                     .getCharacteristic(Characteristic.On)
                     .on('set', this.setLightState.bind(this));
-                    
+
                 var Brightness = DimLightbulbService
                     .getCharacteristic(Characteristic.Brightness)
                     .on('set',this.setLightBrightness.bind(this))
                     .on('get',this.getLightBrightness.bind(this));
-                
+
                 // Register a listener for event changes (dim-light)
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventLightBrightness", function(value) {
                     var light_power_value;
@@ -1076,11 +1077,79 @@ CresKitAccessory.prototype = {
 
                 // Register a listener for event changes
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventPowerState", function(value) {
-              
+
                     PowerState.updateValue(value);
                 }.bind(this));
 
                 services.push( switchService );
+                break;
+            }
+
+            case "TV": {
+                var tvService = new Service.Television();
+                /**
+                var PowerState = tvService
+                    .getCharacteristic(Characteristic.PowerModeSelection)
+                    .on('set', this.setPowerState.bind(this))
+                    .on('get', this.getPowerState.bind(this));
+                **/
+
+                var PowerState = tvService
+                  .getCharacteristic(Characteristic.Active)
+                  .on('get', this.getPowerState.bind(this))
+                  .on('set', this.setPowerState.bind(this));
+
+                // Register a listener for event changes
+                eventEmitter.on(this.config.type + ":" + this.id + ":eventPowerState", function(value) {
+
+                    PowerState.updateValue(value);
+                }.bind(this));
+
+                tvService
+                .setCharacteristic(
+                  Characteristic.SleepDiscoveryMode,
+                  Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE
+                );
+
+
+                var speakerService = new Service.TelevisionSpeaker();
+                speakerService
+                  .setCharacteristic(Characteristic.Active, Characteristic.Active.ACTIVE);
+                speakerService
+                  .setCharacteristic(Characteristic.Name, this.soundoutput);
+                speakerService
+                  .setCharacteristic(Characteristic.VolumeControlType, Characteristic.VolumeControlType.RELATIVE);
+                speakerService
+                  .getCharacteristic(Characteristic.VolumeSelector) //increase/decrease volume
+                  .on('set', this.setVolume.bind(this));
+
+
+                services.push(speakerService);
+
+                tvService
+                .getCharacteristic(Characteristic.RemoteKey)
+                .on('set', 1);
+                services.push(this.tvService);
+
+
+
+                var inputSource = new Service.InputSource("test", "1"); //displayname, subtype?
+               inputSource.setCharacteristic(Characteristic.Identifier, 1)
+                 .setCharacteristic(Characteristic.ConfiguredName, "Apple TV")
+                 .setCharacteristic(Characteristic.CurrentVisibilityState, Characteristic.CurrentVisibilityState.SHOWN)
+                 .setCharacteristic(Characteristic.IsConfigured, Characteristic.IsConfigured.CONFIGURED)
+                 .setCharacteristic(Characteristic.InputSourceType, Characteristic.InputSourceType.AIRPLAY);
+               inputSource.uri = 1;
+               inputSource.type = InputSourceType.AIRPLAY;
+               inputSource.id = 1;
+               services.push(inputSource);
+               tvService.addLinkedService(inputSource);
+               //this.inputSources[this.inputSourceCount] = inputSource;
+               //this.uriToInputSource[uri] = inputSource;
+               //this.inputSourceCount++;
+
+
+                services.push( tvService );
                 break;
             }
 
@@ -1113,7 +1182,7 @@ CresKitAccessory.prototype = {
 
                 // Register a listener for event changes
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventPowerState", function(value) {
-                
+
                     PowerState.updateValue(value);
                 }.bind(this));
 
@@ -1175,15 +1244,15 @@ CresKitAccessory.prototype = {
                     //.on('get', this.getTargetPosition.bind(this));
                 var PositionState = windowCoveringService
                     .getCharacteristic(Characteristic.PositionState)
-                    
+
                 // Register a listener for event changes
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentPosition", function(value) {
-                    
+
                     PositionState.updateValue(state_value);
                     TargetPosition.updateValue(value);
-                    
-                    
-                                     
+
+
+
                 }.bind(this));
 
                 services.push( windowCoveringService );
@@ -1195,10 +1264,10 @@ CresKitAccessory.prototype = {
                 var ThermostatService = new Service.Thermostat();
 
                 var CurrentHeatingCoolingState = ThermostatService
-                    .getCharacteristic(Characteristic.CurrentHeatingCoolingState)                  
+                    .getCharacteristic(Characteristic.CurrentHeatingCoolingState)
                     //.on('get', this.getCurrentHeatingCoolingState.bind(this));
                 var TargetHeatingCoolingState = ThermostatService
-                    .getCharacteristic(Characteristic.TargetHeatingCoolingState)                  
+                    .getCharacteristic(Characteristic.TargetHeatingCoolingState)
                     .on('get', this.getTargetHeatingCoolingState.bind(this))
                     .on('set', this.setTargetHeatingCoolingState.bind(this));
                 var TargetTemperature = ThermostatService
@@ -1207,7 +1276,7 @@ CresKitAccessory.prototype = {
                         minValue: 16,
                         maxValue: 32,
                         minStep:1
-                      }) 
+                      })
                     .on('set', this.setTargetTemperature.bind(this))
                     .on('get', this.getTargetTemperature.bind(this));
                 var CurrentTemperature = ThermostatService
@@ -1220,30 +1289,30 @@ CresKitAccessory.prototype = {
 
                 var TemperatureDisplayUnits = ThermostatService
                     .getCharacteristic(Characteristic.TemperatureDisplayUnits)
-               
+
                 TemperatureDisplayUnits.setValue(0);
-                
+
                 //State
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetHeatingCoolingState", function(value) {
 
                     CurrentHeatingCoolingState.updateValue(value);
                     TargetHeatingCoolingState.updateValue(value);
-                }.bind(this)); 
+                }.bind(this));
 
                 //TargetTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetTemperature", function(value) {
 
                     eventCheckData.push(this.config.type + ":" + this.id + ":eventTargetTemperature:" + value);
-                    
+
                     TargetTemperature.updateValue(value);
 
-                }.bind(this)); 
+                }.bind(this));
 
                 //CurrentTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentTemperature", function(value) {
 
                     CurrentTemperature.updateValue(value);
-                    
+
                 }.bind(this));
 
                 services.push( ThermostatService );
@@ -1255,15 +1324,15 @@ CresKitAccessory.prototype = {
                 var HeaterCoolerService = new Service.HeaterCooler();
 
                 var HeaterCoolerPower = HeaterCoolerService
-                    .getCharacteristic(Characteristic.Active)                  
+                    .getCharacteristic(Characteristic.Active)
                     .on('get', this.getHeaterCoolerPower.bind(this))
                     .on('set', this.setHeaterCoolerPower.bind(this));
                 var TargetHeaterCoolerState = HeaterCoolerService
-                    .getCharacteristic(Characteristic.TargetHeaterCoolerState)                  
+                    .getCharacteristic(Characteristic.TargetHeaterCoolerState)
                     .on('get', this.getTargetHeaterCoolerState.bind(this))
                     .on('set', this.setTargetHeaterCoolerState.bind(this));
                 var CurrentHeaterCoolerState = HeaterCoolerService
-                    .getCharacteristic(Characteristic.CurrentHeaterCoolerState)                  
+                    .getCharacteristic(Characteristic.CurrentHeaterCoolerState)
                     //.on('get', this.getCurrentHeaterCoolerState.bind(this));
                 var CoolingThresholdTemperature = HeaterCoolerService
                     .getCharacteristic(Characteristic.CoolingThresholdTemperature)
@@ -1271,7 +1340,7 @@ CresKitAccessory.prototype = {
                         minValue: 16,
                         maxValue: 32,
                         minStep:1
-                      }) 
+                      })
                     .on('set', this.setTargetTemperature.bind(this))
                     .on('get', this.getTargetTemperature.bind(this));
                 var HeatingThresholdTemperature = HeaterCoolerService
@@ -1280,7 +1349,7 @@ CresKitAccessory.prototype = {
                         minValue: 16,
                         maxValue: 32,
                         minStep:1
-                      }) 
+                      })
                     .on('set', this.setTargetTemperature.bind(this))
                     .on('get', this.getTargetTemperature.bind(this));
                 var CurrentTemperature = HeaterCoolerService
@@ -1294,13 +1363,13 @@ CresKitAccessory.prototype = {
                     .getCharacteristic(Characteristic.RotationSpeed)
                     .on('set', this.setRotationSpeed.bind(this))
                     .on('get', this.getRotationSpeed.bind(this));
-                
+
                 //PowerState
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventHeaterCoolerPower", function(value) {
 
                     HeaterCoolerPower.updateValue(value);
-                    
-                }.bind(this)); 
+
+                }.bind(this));
 
                 //TargetHeaterCoolerState and CurrentHeaterCoolerState
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetHeaterCoolerState", function(value) {
@@ -1323,13 +1392,13 @@ CresKitAccessory.prototype = {
                     TargetHeaterCoolerState.updateValue(value);
                     CurrentHeaterCoolerState.updateValue(currStateValue);
 
-                }.bind(this)); 
+                }.bind(this));
 
                 //CurrentTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentTemperature", function(value) {
 
                     CurrentTemperature.updateValue(value);
-                    
+
                 }.bind(this));
 
                 //TargetTemperature
@@ -1337,19 +1406,19 @@ CresKitAccessory.prototype = {
 
                     HeatingThresholdTemperature.updateValue(value);
                     CoolingThresholdTemperature.updateValue(value);
-                    
+
                 }.bind(this));
 
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventRotationSpeed", function(value) {
 
                     RotationSpeed.updateValue(value);
-                    
+
                 }.bind(this));
 
                 services.push( HeaterCoolerService );
                 break;
             }
-            
+
             case "ThermostatFan": {
                 var fanService = new Service.Fan();
 
@@ -1381,7 +1450,7 @@ CresKitAccessory.prototype = {
                 services.push( fanService );
                 break;
             }
-            
+
             case "AirPurifier": {
                 var AirPurifierService = new Service.AirPurifier();
                 var AirPurifierPowerState = AirPurifierService
@@ -1407,8 +1476,8 @@ CresKitAccessory.prototype = {
 
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventAirPurifierPowerState", function(value) {
-                    
-                    
+
+
                     if (value)
                     {
                         CurrentAirPurifierState.updateValue(2);
@@ -1416,17 +1485,17 @@ CresKitAccessory.prototype = {
                     {
                         CurrentAirPurifierState.updateValue(value);
                     }
-                    
+
                     AirPurifierPowerState.updateValue(value);
                 }.bind(this));
 
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventAirPurifierRotationSpeed", function(value) {
-                    
+
                     AirPurifierRotationSpeed.updateValue(value);
                 }.bind(this));
 
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetAirPurifierState", function(value) {
-                    
+
                     TargetAirPurifierState.updateValue(value);
                 }.bind(this));
 
@@ -1436,9 +1505,9 @@ CresKitAccessory.prototype = {
                     if(value>5)
                     {
                         changeFilter = 0;
-                    } else 
+                    } else
                     {
-                        changeFilter = 1; 
+                        changeFilter = 1;
                     }
                     FilterLifeLevel.updateValue(value);
                     FilterChangeIndication.updateValue(changeFilter);
@@ -1468,22 +1537,22 @@ CresKitAccessory.prototype = {
                     var AIQ_value;
                     if (value < 35 && value > 0)
                     {
-                        AIQ_value = 1;   
+                        AIQ_value = 1;
                     } else if (value < 75 && value >=35)
                     {
-                        AIQ_value = 2;   
+                        AIQ_value = 2;
                     }
                     else if (value < 115 && value >=75)
                     {
-                        AIQ_value = 3;   
+                        AIQ_value = 3;
                     }
                     else if (value < 150 && value >=115)
                     {
-                        AIQ_value = 4;   
+                        AIQ_value = 4;
                     }
                     else if (value >=150)
                     {
-                        AIQ_value = 5;   
+                        AIQ_value = 5;
                     } else
                     {
                         AIQ_value = 0;
@@ -1493,12 +1562,12 @@ CresKitAccessory.prototype = {
                 }.bind(this));
 
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventVOC_Value", function(value) {
-                    
+
                     VOC_Value.updateValue(value);
                 }.bind(this));
 
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCarbonDioxideLevel", function(value) {
-                   
+
                     CarbonDioxideLevel.updateValue(value);
                 }.bind(this));
 
@@ -1511,7 +1580,7 @@ CresKitAccessory.prototype = {
                 var CurrentRelativeHumidity = HumiditySensorService
                     .getCharacteristic(Characteristic.CurrentRelativeHumidity)
                     .on('get', this.getCurrentRelativeHumidity.bind(this));
-                
+
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentRelativeHumidity", function(value) {
 
@@ -1528,7 +1597,7 @@ CresKitAccessory.prototype = {
                 var TempSensorCurrentTemperature = TemperatureSensorService
                     .getCharacteristic(Characteristic.CurrentTemperature)
                     .on('get', this.getTempSensorCurrentTemperature.bind(this));
-                
+
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTempSensorCurrentTemperature", function(value) {
 
@@ -1547,7 +1616,7 @@ CresKitAccessory.prototype = {
 
                 // Register a listener for event changes
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventBinarySensorState", function(value) {
-                    
+
                     BinarySensorState.updateValue(value);
                 }.bind(this));
 
@@ -1563,10 +1632,10 @@ CresKitAccessory.prototype = {
                 var CarbonDioxideDetected = CarbonDioxideSensorService
                     .getCharacteristic(Characteristic.CarbonDioxideDetected)
                     //.on('get', this.getCarbonDioxideDetected.bind(this));
-                
+
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCarbonDioxideLevel", function(value) {
-                   
+
                     var Co2_value;
                     if (value >800)
                     {
@@ -1579,7 +1648,7 @@ CresKitAccessory.prototype = {
                     CarbonDioxideLevel.updateValue(value);
                     CarbonDioxideDetected.updateValue(Co2_value);
                 }.bind(this));
-                
+
                 services.push( CarbonDioxideSensorService );
                 break;
             }
@@ -1589,29 +1658,29 @@ CresKitAccessory.prototype = {
                 var SmokeDetected = SmokeSensorService
                     .getCharacteristic(Characteristic.SmokeDetected)
                     .on('get', this.getSmokeDetected.bind(this));
-                
+
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventSmokeDetected", function(value) {
-                  
+
                     SmokeDetected.updateValue(value);
                 }.bind(this));
-                
+
                 services.push( SmokeSensorService );
                 break;
             }
 
-            case "OccupancySensor": { 
+            case "OccupancySensor": {
                 var OccupancySensorService = new Service.OccupancySensor();
                 var OccupancyDetected = OccupancySensorService
                     .getCharacteristic(Characteristic.OccupancyDetected)
                     .on('get', this.getOccupancyDetected.bind(this));
-                
+
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventOccupancyDetected", function(value) {
-                
+
                     OccupancyDetected.updateValue(value);
                 }.bind(this));
-                
+
                 services.push( OccupancySensorService );
                 break;
             }
@@ -1621,13 +1690,13 @@ CresKitAccessory.prototype = {
                 var MotionDetected = MotionSensorService
                     .getCharacteristic(Characteristic.MotionDetected)
                     .on('get', this.getMotionDetected.bind(this));
-                
+
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventMotionDetected", function(value) {
-                
+
                     MotionDetected.updateValue(value);
                 }.bind(this));
-                
+
                 services.push( MotionSensorService );
                 break;
             }
@@ -1637,13 +1706,13 @@ CresKitAccessory.prototype = {
                 var CurrentAmbientLightLevel = LightSensorService
                     .getCharacteristic(Characteristic.CurrentAmbientLightLevel)
                     .on('get', this.getCurrentAmbientLightLevel.bind(this));
-                
+
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentAmbientLightLevel", function(value) {
-                 
+
                     CurrentAmbientLightLevel.updateValue(value);
                 }.bind(this));
-                
+
                 services.push( LightSensorService );
                 break;
             }
@@ -1653,13 +1722,13 @@ CresKitAccessory.prototype = {
                 var LeakDetected = LeakSensorService
                     .getCharacteristic(Characteristic.LeakDetected)
                     .on('get', this.getLeakDetected.bind(this));
-                
+
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventLeakDetected", function(value) {
-                
+
                     LeakDetected.setValue(value);
                 }.bind(this));
-                
+
                 services.push( LeakSensorService );
                 break;
             }
@@ -1670,13 +1739,13 @@ CresKitAccessory.prototype = {
                     .getCharacteristic(Characteristic.Active)
                     .on('get', this.getFaucetActive.bind(this))
                     .on('set', this.setFaucetActive.bind(this));
-                
+
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventFaucetActive", function(value) {
-                    
+
                     FaucetActive.updateValue(value);
                 }.bind(this));
-                
+
                 services.push( FaucetService );
                 break;
             }
@@ -1692,11 +1761,11 @@ CresKitAccessory.prototype = {
 
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventOutletPower", function(value) {
-                     
+
                     OutletInUse.updateValue(value);
                     OutletPower.updateValue(value);
                 }.bind(this));
-                
+
                 services.push( OutletService );
                 break;
             }
@@ -1715,11 +1784,11 @@ CresKitAccessory.prototype = {
                     ValveValveType.setValue(3);
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventValveActive", function(value) {
-                                       
-                   ValveInUse.updateValue(value); 
+
+                   ValveInUse.updateValue(value);
                    ValveActive.updateValue(value);
                 }.bind(this));
-                
+
                 services.push( ValveService );
                 break;
             }
@@ -1735,15 +1804,15 @@ CresKitAccessory.prototype = {
                 var PositionState = DoorService
                     .getCharacteristic(Characteristic.PositionState)
                     //.on('get', this.getPositionState.bind(this));
-                
+
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentPosition", function(value) {
-                    
+
                     CurrentPosition.updateValue(value);
                     //TargetPosition.updateValue(value);
                 }.bind(this));
 
-                
+
                 services.push( DoorService );
                 break;
             }
@@ -1755,22 +1824,22 @@ CresKitAccessory.prototype = {
                 var FilterLifeLevel = FilterMaintenanceService
                     .getCharacteristic(Characteristic.FilterLifeLevel)
                     .on('get', this.getFilterLifeLevel.bind(this));
-                
+
                 // Register a listener
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventFilterLifeLevel", function(value) {
-                   
+
                     var changeFilter;
                     if(value>5)
                     {
                         changeFilter = 0;
-                    } else 
+                    } else
                     {
-                        changeFilter = 1; 
+                        changeFilter = 1;
                     }
                     FilterLifeLevel.updateValue(value);
                     FilterChangeIndication.updateValue(changeFilter);
                 }.bind(this));
- 
+
                 services.push( FilterMaintenanceService );
                 break;
             }
