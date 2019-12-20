@@ -1,10 +1,6 @@
 {
   "name": "homebridge-creskit2",
-<<<<<<< HEAD
   "version": "2.2.0",
-=======
-  "version": "2.1.1",
->>>>>>> 6e53c86f064905ecbd09d739b89f9d8d3c8d378c
   "description": "A crestron plugin for homebridge",
   "main": "index.js",
   "scripts": {
@@ -28,12 +24,7 @@
   },
   "homepage": "https://github.com/songzh96/homebridge-crestron#readme",
   "dependencies": {
-<<<<<<< HEAD
     "async": "^2.6.1"
-=======
-    "async": "^2.6.1",
-    "request": "^2.88.0"
->>>>>>> 6e53c86f064905ecbd09d739b89f9d8d3c8d378c
   },
   "engines": {
     "homebridge": ">=0.4.16",

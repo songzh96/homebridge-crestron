@@ -1,6 +1,5 @@
 # It‘s based on [homebridge-creskit](https://github.com/marcusadolfsson/homebridge-creskit)
 
-<<<<<<< HEAD
 # If you need me to custom development, please send me an email. Developing this plugin also takes a lot of time, time is money, please understand.
 
 ### CHANGE
@@ -11,8 +10,6 @@
 - add Window
 - add TV(Only Power Now)
 
-=======
->>>>>>> 6e53c86f064905ecbd09d739b89f9d8d3c8d378c
 If you want to know how to use this plugin，please see Chinese [README](https://github.com/songzh96/homebridge-crestron/blob/master/README-ZhCN.md)（use Google translate）
 
 CresKit (together with Homebridge) turns Creston controlled devices into HomeKit accessories, enabling you to control many functions using Siri and the iOS 10 Home app. 

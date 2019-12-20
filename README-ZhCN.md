@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 # 如果你需要定制开发，请发邮件给我，开发这个插件也是需要很多时间的，请理解。
 ### V2.0
-=======
-### V1.0
->>>>>>> 6e53c86f064905ecbd09d739b89f9d8d3c8d378c
 
 **1. 本项目是基于[homebridge-creskit](https://github.com/marcusadolfsson/homebridge-creskit)进行二次开发的。**
 
@@ -15,17 +11,12 @@
 
 **5.在原版的基础上增加了多种配件（调光调色灯，空调，风扇，空净以及各类传感器等）**
 
-<<<<<<< HEAD
 ### V2.1
-=======
-### V1.1
->>>>>>> 6e53c86f064905ecbd09d739b89f9d8d3c8d378c
 
 **1.修复用Siri对调光灯说“把灯打开”没反应**
 
 **2.增加地暖配件（只可控制温度和开关）**
 
-<<<<<<< HEAD
 ### V2.2
 **1.修复窗帘更新状态的BUG**
 
@@ -35,8 +26,6 @@
 
 **4.增加了电视和窗户**
 
-=======
->>>>>>> 6e53c86f064905ecbd09d739b89f9d8d3c8d378c
 ![HomeBridge.png](https://upload-images.jianshu.io/upload_images/3246153-34905aac5cb382fe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ![Crestron](https://upload-images.jianshu.io/upload_images/3246153-847e7112c89bc585.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
