@@ -66,15 +66,15 @@ CresKit.prototype = {
             this.log('Connection closed');
             // Handle error properly
             // Reconnect
-            setTimeout
+
             try {
-                setTimeout(() => node.crestronConnection.connect(node.port, node.host, function () {
-                    RED.log.info('Re-Connected to Crestron Machine');
-                }.bind(this)), 10000);
+                setTimeout(() => cresKitSocket.connect(this.config["port"], this.config["host"], function () {
+                    this.log('Re-Connected to Crestron Machine');
+                }.bind(this)), 20000);
             } catch (err) {
                 this.log(err);
             }
-            
+
         }.bind(this));
 
         // All Crestron replies goes via this connection
@@ -578,7 +578,7 @@ CresKitAccessory.prototype = {
     //---------------
     // TemperatureSensor
     //---------------
-    
+
 
     //---------------
     // Binary Sensor, SmokeSensor, OccupancySensor, MotionSensor, LeakSensor
@@ -641,7 +641,7 @@ CresKitAccessory.prototype = {
         cresKitSocket.write(this.config.type + ":" + this.id + ":setFaucetActive:" + value + "*");
         callback();
     },
-        
+
     //---------------
     // Outlet
     //---------------
@@ -838,15 +838,12 @@ CresKitAccessory.prototype = {
                     .getCharacteristic(Characteristic.VolumeSelector) //increase/decrease volume
                     .on('set', this.setVolume.bind(this));
 
-
                 services.push(speakerService);
 
                 tvService
                     .getCharacteristic(Characteristic.RemoteKey)
                     .on('set', 1);
                 services.push(this.tvService);
-
-
 
                 var inputSource = new Service.InputSource("test", "1"); //displayname, subtype?
                 inputSource.setCharacteristic(Characteristic.Identifier, 1)
@@ -1044,7 +1041,7 @@ CresKitAccessory.prototype = {
                     .on('set', this.setTargetHeaterCoolerState.bind(this));
                 var CurrentHeaterCoolerState = HeaterCoolerService
                     .getCharacteristic(Characteristic.CurrentHeaterCoolerState)
-                    
+
                 var CoolingThresholdTemperature = HeaterCoolerService
                     .getCharacteristic(Characteristic.CoolingThresholdTemperature)
                     .setProps({
@@ -1083,10 +1080,10 @@ CresKitAccessory.prototype = {
                     else if (value === 2) {
                         currStateValue = 3;
                     }
-                    
+
                     TargetHeaterCoolerState.updateValue(value);
                     setTimeout(function () { CurrentHeaterCoolerState.updateValue(currStateValue); }, 100);
-                    
+
 
                 }.bind(this));
 
@@ -1113,16 +1110,16 @@ CresKitAccessory.prototype = {
             case "Heater": {
                 var HeaterService = new Service.HeaterCooler();
 
-                var HeaterCoolerPower = HeaterService
+                var HeaterPower = HeaterService
                     .getCharacteristic(Characteristic.Active)
                     .on('get', this.getPowerState.bind(this))
                     .on('set', this.setPowerState.bind(this));
-                var TargetHeaterCoolerState = HeaterService
+                var TargetHeaterState = HeaterService
                     .getCharacteristic(Characteristic.TargetHeaterCoolerState)
                     .setProps({
                         validValues: [1]
                     })
-                var CurrentHeaterCoolerState = HeaterService
+                var CurrentHeaterState = HeaterService
                     .getCharacteristic(Characteristic.CurrentHeaterCoolerState)
                     .setProps({
                         validValues: [0, 2]
@@ -1144,14 +1141,14 @@ CresKitAccessory.prototype = {
                 //PowerState
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventPowerState", function (value) {
                     if (value) {
-                        CurrentHeaterCoolerState.updateValue(2);
-                        TargetHeaterCoolerState.updateValue(1);
+                        CurrentHeaterState.updateValue(2);
+                        TargetHeaterState.updateValue(1);
                     }
                     else {
-                        CurrentHeaterCoolerState.updateValue(0);
+                        CurrentHeaterState.updateValue(0);
                     }
 
-                    HeaterCoolerPower.updateValue(value);
+                    HeaterPower.updateValue(value);
                 }.bind(this));
 
                 //CurrentTemperature
@@ -1233,12 +1230,10 @@ CresKitAccessory.prototype = {
                 }.bind(this));
 
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventAirPurifierRotationSpeed", function (value) {
-                    if (value > 0)
-                    {
+                    if (value > 0) {
                         AirPurifierPowerState.updateValue(1);
                     }
-                    else
-                    {
+                    else {
                         AirPurifierPowerState.updateValue(0);
                     }
 
