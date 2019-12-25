@@ -1,3 +1,7 @@
+/*
+https://github.com/nfarina/homebridge-legacy-plugins/blob/master/platforms/HomeSeer.js used for reference.
+*/
+
 'use strict';
 
 var async = require('async');
@@ -22,7 +26,7 @@ function closeGetStatus(what) {
     var found = openGetStatus.indexOf(what);
     openGetStatus.splice(found, 1);
 
-    // console.log(openGetStatus);
+    console.log(openGetStatus);
 }
 
 // Resend unclosed GetStatus
@@ -62,15 +66,15 @@ CresKit.prototype = {
             this.log('Connection closed');
             // Handle error properly
             // Reconnect
+            setTimeout
             try {
-                cresKitSocket.connect(this.config["port"], this.config["host"], function () {
-                    this.log('Re-Connected to Crestron Machine');
-                }.bind(this));
+                setTimeout(() => node.crestronConnection.connect(node.port, node.host, function () {
+                    RED.log.info('Re-Connected to Crestron Machine');
+                }.bind(this)), 10000);
             } catch (err) {
                 this.log(err);
             }
-
-
+            
         }.bind(this));
 
         // All Crestron replies goes via this connection
@@ -123,7 +127,7 @@ function CresKitAccessory(log, platformConfig, accessoryConfig) {
     this.config = accessoryConfig;
     this.id = accessoryConfig.id;
     this.name = accessoryConfig.name
-    this.model = "Komen v2.1.2";
+    this.model = "Komen v2.2.0";
 
 }
 
@@ -372,7 +376,7 @@ CresKitAccessory.prototype = {
         eventEmitter.once(this.config.type + ":" + this.id + ":getCurrentTemperature", function (value) {
             try {
                 closeGetStatus(this.config.type + ":" + this.id + ":getCurrrentTemperature:*");
-                eventEmitter.emit(this.config.type + ":" + this.id + ":eventCurrrentTemperature", value);
+                eventEmitter.emit(this.config.type + ":" + this.id + ":eventCurrentTemperature", value);
                 callback(null, value);
             } catch (err) {
                 this.log(err);
@@ -551,6 +555,7 @@ CresKitAccessory.prototype = {
             }
         }.bind(this));
     },
+
     //---------------
     // HumiditySensor
     //---------------
@@ -1032,11 +1037,14 @@ CresKitAccessory.prototype = {
                     .on('set', this.setPowerState.bind(this));
                 var TargetHeaterCoolerState = HeaterCoolerService
                     .getCharacteristic(Characteristic.TargetHeaterCoolerState)
+                    .setProps({
+                        validValues: [1, 2]
+                    })
                     .on('get', this.getTargetHeaterCoolerState.bind(this))
                     .on('set', this.setTargetHeaterCoolerState.bind(this));
                 var CurrentHeaterCoolerState = HeaterCoolerService
                     .getCharacteristic(Characteristic.CurrentHeaterCoolerState)
-                //.on('get', this.getCurrentHeaterCoolerState.bind(this));
+                    
                 var CoolingThresholdTemperature = HeaterCoolerService
                     .getCharacteristic(Characteristic.CoolingThresholdTemperature)
                     .setProps({
@@ -1075,11 +1083,10 @@ CresKitAccessory.prototype = {
                     else if (value === 2) {
                         currStateValue = 3;
                     }
-                    else if (value === 0) {
-                        currStateValue = 1;
-                    }
+                    
                     TargetHeaterCoolerState.updateValue(value);
-                    CurrentHeaterCoolerState.updateValue(currStateValue);
+                    setTimeout(function () { CurrentHeaterCoolerState.updateValue(currStateValue); }, 100);
+                    
 
                 }.bind(this));
 
@@ -1521,7 +1528,8 @@ CresKitAccessory.prototype = {
                     .on('set', this.setTargetPosition.bind(this));
                 var PositionState = DoorService
                     .getCharacteristic(Characteristic.PositionState)
-                    
+                //.on('get', this.getPositionState.bind(this));
+
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentPosition", function (value) {
                     TargetPosition.updateValue(value);
                     setTimeout(function () { CurrentPosition.updateValue(value); }, 2000);
