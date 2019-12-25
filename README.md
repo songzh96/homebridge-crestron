@@ -1,9 +1,10 @@
 # It‘s based on [homebridge-creskit](https://github.com/marcusadolfsson/homebridge-creskit)
 
-# If you need me to custom development, please send me an email. Developing this plugin also takes a lot of time, time is money, please understand.
+#### If you need me to custom development, please send me an email. Developing this plugin also takes a lot of time, time is money, please understand.
 
 ### CHANGE
 **V2.2.0**
+
 - code clean
 - fix WindowCovering Status Bug
 - fix AirPurifier Status Bug
@@ -29,6 +30,8 @@ HomeKit accessories are supported:
 - Door Locks
 - Airpurifier
 - Valve
+- Heater
+- TV(Only Power) by @DerrickGibbs1
 
 In Homebridge's config.json file you specify the accessories you want to enable, and link the appropiate Crestron signals via the included SIMPL+ Module (tested on MC3,AP3,PRO3). You can then use the iOS 10 Home app to tie the accessories to rooms and groups.
 
