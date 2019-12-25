@@ -12,6 +12,7 @@
 - add TV(Only Power Now)
 
 **V2.2.1**
+
 - fixed some bugs
 
 If you want to know how to use this plugin，please see Chinese [README](https://github.com/songzh96/homebridge-crestron/blob/master/README-ZhCN.md)（use Google translate）
