@@ -29,6 +29,8 @@
 ### V2.2.1
 **1.修复一些BUG**
 
+### V2.2.2
+**1.上传了demo项目**
 
 ![HomeBridge.png](https://upload-images.jianshu.io/upload_images/3246153-34905aac5cb382fe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ![Crestron](https://upload-images.jianshu.io/upload_images/3246153-847e7112c89bc585.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
