@@ -7,8 +7,8 @@
   },
   "platforms": [
     {
-      "platform": "Komen",
-      "name": "CresKit",
+      "platform": "CresKit",
+      "name": "Komen",
       "host": "192.168.1.99",
       "port": "50001",
       "accessories": [
