@@ -1165,6 +1165,64 @@ CresKitAccessory.prototype = {
                 break;
             }
 
+            case "Cooler": {
+                var CoolerService = new Service.HeaterCooler();
+
+                var CoolerPower = CoolerService
+                    .getCharacteristic(Characteristic.Active)
+                    .on('get', this.getPowerState.bind(this))
+                    .on('set', this.setPowerState.bind(this));
+                var TargetCoolerState = CoolerService
+                    .getCharacteristic(Characteristic.TargetHeaterCoolerState)
+                    .setProps({
+                        validValues: [2]
+                    })
+                var CurrentCoolerState = CoolerService
+                    .getCharacteristic(Characteristic.CurrentHeaterCoolerState)
+                    .setProps({
+                        validValues: [0, 3]
+                    })
+
+                var CoolingThresholdTemperature = CoolerService
+                    .getCharacteristic(Characteristic.CoolingThresholdTemperature)
+                    .setProps({
+                        minValue: 16,
+                        maxValue: 32,
+                        minStep: 1
+                    })
+                    .on('set', this.setTargetTemperature.bind(this))
+                    .on('get', this.getTargetTemperature.bind(this));
+                var CurrentTemperature = CoolerService
+                    .getCharacteristic(Characteristic.CurrentTemperature)
+                    .on('get', this.getCurrentTemperature.bind(this));
+
+                //PowerState
+                eventEmitter.on(this.config.type + ":" + this.id + ":eventPowerState", function (value) {
+                    if (value) {
+                        CurrentCoolerState.updateValue(3);
+                        TargetCoolerState.updateValue(2);
+                    }
+                    else {
+                        CurrentCoolerState.updateValue(0);
+                    }
+
+                    CoolerPower.updateValue(value);
+                }.bind(this));
+
+                //CurrentTemperature
+                eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentTemperature", function (value) {
+                    CurrentTemperature.updateValue(value);
+                }.bind(this));
+
+                //TargetTemperature
+                eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetTemperature", function (value) {
+                    CoolingThresholdTemperature.updateValue(value);
+                }.bind(this));
+
+                services.push(CoolerService);
+                break;
+            }
+
             case "SpeedFan": {
                 var fanService = new Service.Fan();
 
