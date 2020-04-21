@@ -70,7 +70,7 @@ CresKit.prototype = {
             try {
                 setTimeout(() => cresKitSocket.connect(this.config["port"], this.config["host"], function () {
                     this.log('Re-Connected to Crestron Machine');
-                }.bind(this)), 20000);
+                }.bind(this)), 25000);
             } catch (err) {
                 this.log(err);
             }
@@ -175,7 +175,6 @@ CresKitAccessory.prototype = {
         eventEmitter.once(this.config.type + ":" + this.id + ":getLightBrightness", function (value) {
             try {
                 closeGetStatus(this.config.type + ":" + this.id + ":getLightBrightness:*");
-
                 eventEmitter.emit(this.config.type + ":" + this.id + ":eventLightBrightness", value);
                 callback(null, value);
             } catch (err) {
@@ -183,22 +182,22 @@ CresKitAccessory.prototype = {
             }
         }.bind(this));
     },
+    
     setLightBrightness: function (value, callback) {
-
-        cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:" + value + "*"); // (* after value required on set)
-        //this.log("cresKitSocket.write" + (this.config.type + ":" + this.id + ":setLightBrightness:" + value + "*"));
-        callback();
+        // fix the light not dim to the set brightness,when the light closed
+        setTimeout(()=>cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:" + value + "*"),50);
+        callback(null);
     },
 
     setLightState: function (value, callback) {
-
+        
+        this.log( this.config.type + ":" + this.id + ":setLightState:" + value + "*");
         if (value) {
             cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:999*");
         } else {
             cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:0*");
         }
-
-        callback();
+        callback(null);    
     },
 
     //---------------

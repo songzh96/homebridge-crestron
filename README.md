@@ -19,6 +19,10 @@
 
 - Upload demo
 
+### V2.3.1
+- add cooler device
+- Fix the problem that the brightness value of the dimmer in the scene is not correct when the light is turned off
+
 If you want to know how to use this plugin，please see Chinese [README](https://github.com/songzh96/homebridge-crestron/blob/master/README-ZhCN.md)（use Google translate）
 
 CresKit (together with Homebridge) turns Creston controlled devices into HomeKit accessories, enabling you to control many functions using Siri and the iOS 10 Home app. 
