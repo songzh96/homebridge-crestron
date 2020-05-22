@@ -36,6 +36,9 @@
 **1.添加Cooler设备**
 **2.修复在灯光关闭的时候，场景里的调光灯亮度值不对的问题**
 
+### V2.3.2
+**1.支持4系列主机**
+
 ![HomeBridge.png](https://upload-images.jianshu.io/upload_images/3246153-34905aac5cb382fe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ![Crestron](https://upload-images.jianshu.io/upload_images/3246153-847e7112c89bc585.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 

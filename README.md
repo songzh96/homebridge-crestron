@@ -1,4 +1,4 @@
-# It‘s based on [homebridge-creskit](https://github.com/marcusadolfsson/homebridge-creskit)
+# Homebridge-Crestron
 
 #### If you need me to custom development, please send me an email. Developing this plugin also takes a lot of time, time is money, please understand.
 
@@ -22,6 +22,9 @@
 ### V2.3.1
 - add cooler device
 - Fix the problem that the brightness value of the dimmer in the scene is not correct when the light is turned off
+
+### V2.3.2
+- support 4 series crestron professor
 
 If you want to know how to use this plugin，please see Chinese [README](https://github.com/songzh96/homebridge-crestron/blob/master/README-ZhCN.md)（use Google translate）
 
