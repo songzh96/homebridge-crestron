@@ -11,6 +11,9 @@
       "name": "Komen",
       "host": "192.168.1.99",
       "port": "50001",
+      "minValue":60,  // HeaterCooler SetTemperature MinValue
+      "maxValue":90,  // HeaterCooler SetTemperature MaxValue
+      "Fahrenheit":1, // HeaterCooler Temperature Display 1:Fahrenheit, 0:Celsius
       "accessories": [
         {
           "id": 1,
@@ -30,7 +33,7 @@
         {
           "id": 1,
           "type": "SpeedFan",
-          "name": "SPEEDFAN"
+          "name": "SpeedFan1"
         },
         {
           "id": 1,
@@ -40,32 +43,32 @@
         {
           "id": 1,
           "type": "WindowsCovering",
-          "name": "WINDOWCOVERING"
+          "name": "WindowsCovering1"
         },
         {
           "id": 1,
           "type": "AirQualitySensor",
-          "name": "空气质量传感器1"
+          "name": "AirQualitySensor1"
         },
         {
           "id": 1,
           "type": "HumiditySensor",
-          "name": "湿度传感器1"
+          "name": "HumiditySensor1"
         },
         {
           "id": 1,
           "type": "TemperatureSensor",
-          "name": "温度传感器1"
+          "name": "TemperatureSensor1"
         },
         {
           "id": 1,
           "type": "CarbonDioxideSensor",
-          "name": "二氧化碳传感器1"
+          "name": "CarbonDioxideSensor1"
         },
         {
           "id": 1,
           "type": "OccupancySensor",
-          "name": "人体传感器20"
+          "name": "OccupancySensor1"
         },
         {
           "id": 1,

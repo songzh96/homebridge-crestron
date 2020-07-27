@@ -1,7 +1,3 @@
-/*
-https://github.com/nfarina/homebridge-legacy-plugins/blob/master/platforms/HomeSeer.js used for reference.
-*/
-
 'use strict';
 
 var async = require('async');
@@ -126,9 +122,11 @@ function CresKitAccessory(log, platformConfig, accessoryConfig) {
     this.log = log;
     this.config = accessoryConfig;
     this.id = accessoryConfig.id;
-    this.name = accessoryConfig.name
-    this.model = "Komen v2.2.0";
-
+    this.name = accessoryConfig.name;
+    this.model = "Komen v2.2.1";
+    this.minValue = platformConfig.minValue || 16;
+    this.maxValue = platformConfig.maxValue || 32;
+    this.Fahrenheit = platformConfig.Fahrenheit || 0;
 }
 
 CresKitAccessory.prototype = {
@@ -182,22 +180,22 @@ CresKitAccessory.prototype = {
             }
         }.bind(this));
     },
-    
+
     setLightBrightness: function (value, callback) {
         // fix the light not dim to the set brightness,when the light closed
-        setTimeout(()=>cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:" + value + "*"),50);
+        setTimeout(() => cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:" + value + "*"), 50);
         callback(null);
     },
 
     setLightState: function (value, callback) {
-        
-        this.log( this.config.type + ":" + this.id + ":setLightState:" + value + "*");
+
+        this.log(this.config.type + ":" + this.id + ":setLightState:" + value + "*");
         if (value) {
             cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:999*");
         } else {
             cresKitSocket.write(this.config.type + ":" + this.id + ":setLightBrightness:0*");
         }
-        callback(null);    
+        callback(null);
     },
 
     //---------------
@@ -981,24 +979,20 @@ CresKitAccessory.prototype = {
                 var TargetTemperature = ThermostatService
                     .getCharacteristic(Characteristic.TargetTemperature)
                     .setProps({
-                        minValue: 16,
-                        maxValue: 32,
+                        minValue: this.minValue,
+                        maxValue: this.maxValue,
                         minStep: 1
                     })
                     .on('set', this.setTargetTemperature.bind(this))
                     .on('get', this.getTargetTemperature.bind(this));
                 var CurrentTemperature = ThermostatService
                     .getCharacteristic(Characteristic.CurrentTemperature)
-                    .setProps({
-                        minValue: 16,
-                        maxValue: 32
-                    })
                     .on('get', this.getCurrentTemperature.bind(this));
 
                 var TemperatureDisplayUnits = ThermostatService
                     .getCharacteristic(Characteristic.TemperatureDisplayUnits)
 
-                TemperatureDisplayUnits.setValue(0);
+                TemperatureDisplayUnits.setValue(this.Fahrenheit);
 
                 //State
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetHeatingCoolingState", function (value) {
@@ -1034,7 +1028,7 @@ CresKitAccessory.prototype = {
                 var TargetHeaterCoolerState = HeaterCoolerService
                     .getCharacteristic(Characteristic.TargetHeaterCoolerState)
                     .setProps({
-                        validValues: [1, 2]
+                        validValues: [1,2]
                     })
                     .on('get', this.getTargetHeaterCoolerState.bind(this))
                     .on('set', this.setTargetHeaterCoolerState.bind(this));
@@ -1044,8 +1038,8 @@ CresKitAccessory.prototype = {
                 var CoolingThresholdTemperature = HeaterCoolerService
                     .getCharacteristic(Characteristic.CoolingThresholdTemperature)
                     .setProps({
-                        minValue: 16,
-                        maxValue: 32,
+                        minValue: this.minValue,
+                        maxValue: this.maxValue,
                         minStep: 1
                     })
                     .on('set', this.setTargetTemperature.bind(this))
@@ -1053,8 +1047,8 @@ CresKitAccessory.prototype = {
                 var HeatingThresholdTemperature = HeaterCoolerService
                     .getCharacteristic(Characteristic.HeatingThresholdTemperature)
                     .setProps({
-                        minValue: 16,
-                        maxValue: 32,
+                        minValue: this.minValue,
+                        maxValue: this.maxValue,
                         minStep: 1
                     })
                     .on('set', this.setTargetTemperature.bind(this))
@@ -1066,6 +1060,9 @@ CresKitAccessory.prototype = {
                     .getCharacteristic(Characteristic.RotationSpeed)
                     .on('set', this.setRotationSpeed.bind(this))
                     .on('get', this.getRotationSpeed.bind(this));
+                var TemperatureDisplayUnits = HeaterCoolerService
+                    .getCharacteristic(Characteristic.TemperatureDisplayUnits)
+                TemperatureDisplayUnits.setValue(this.Fahrenheit);
 
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventPowerState", function (value) {
                     HeaterCoolerPower.updateValue(value);
@@ -1080,10 +1077,11 @@ CresKitAccessory.prototype = {
                         currStateValue = 3;
                     }
 
+                    // update TargetHeaterCoolerState
                     TargetHeaterCoolerState.updateValue(value);
+
+                    // update CurrentHeaterCoolerState
                     setTimeout(function () { CurrentHeaterCoolerState.updateValue(currStateValue); }, 100);
-
-
                 }.bind(this));
 
                 //CurrentTemperature
@@ -1127,8 +1125,8 @@ CresKitAccessory.prototype = {
                 var HeatingThresholdTemperature = HeaterService
                     .getCharacteristic(Characteristic.HeatingThresholdTemperature)
                     .setProps({
-                        minValue: 16,
-                        maxValue: 32,
+                        minValue: this.minValue,
+                        maxValue: this.maxValue,
                         minStep: 1
                     })
                     .on('set', this.setTargetTemperature.bind(this))
@@ -1136,7 +1134,9 @@ CresKitAccessory.prototype = {
                 var CurrentTemperature = HeaterService
                     .getCharacteristic(Characteristic.CurrentTemperature)
                     .on('get', this.getCurrentTemperature.bind(this));
-
+                var TemperatureDisplayUnits = HeaterService
+                    .getCharacteristic(Characteristic.TemperatureDisplayUnits)
+                TemperatureDisplayUnits.setValue(this.Fahrenheit);
                 //PowerState
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventPowerState", function (value) {
                     if (value) {
@@ -1185,8 +1185,8 @@ CresKitAccessory.prototype = {
                 var CoolingThresholdTemperature = CoolerService
                     .getCharacteristic(Characteristic.CoolingThresholdTemperature)
                     .setProps({
-                        minValue: 16,
-                        maxValue: 32,
+                        minValue: this.minValue,
+                        maxValue: this.maxValue,
                         minStep: 1
                     })
                     .on('set', this.setTargetTemperature.bind(this))
@@ -1194,7 +1194,9 @@ CresKitAccessory.prototype = {
                 var CurrentTemperature = CoolerService
                     .getCharacteristic(Characteristic.CurrentTemperature)
                     .on('get', this.getCurrentTemperature.bind(this));
-
+                var TemperatureDisplayUnits = CoolerService
+                    .getCharacteristic(Characteristic.TemperatureDisplayUnits)
+                TemperatureDisplayUnits.setValue(this.Fahrenheit);
                 //PowerState
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventPowerState", function (value) {
                     if (value) {

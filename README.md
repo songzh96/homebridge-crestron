@@ -2,7 +2,7 @@
 
 #### If you need me to custom development, please send me an email. Developing this plugin also takes a lot of time, time is money, please understand.
 
-### CHANGE
+### CHANGE LOG
 **V2.2.0**
 
 - code clean
@@ -19,12 +19,16 @@
 
 - Upload demo
 
-### V2.3.1
+**V2.3.1**
 - add cooler device
 - Fix the problem that the brightness value of the dimmer in the scene is not correct when the light is turned off
 
-### V2.3.2
+**V2.3.2**
 - support 4 series crestron professor
+
+**V2.3.3**
+- ~~support 4 series crestron professor~~,because The program compiled by SIMPL4.14 will have strange bugs
+- add Custom Fahrenheit, see config_sample.json
 
 If you want to know how to use this plugin，please see Chinese [README](https://github.com/songzh96/homebridge-crestron/blob/master/README-ZhCN.md)（use Google translate）
 
@@ -38,14 +42,14 @@ HomeKit accessories are supported:
 - Switches (can also be used to for Creston Scenes)
 - Garage Doors
 - Alarm
-- Thermostat
-- HeaterCooler
 - Shades
 - Various Sensors
 - Door Locks
 - Airpurifier
 - Valve
+- HeaterCooler
 - Heater
+- Cooler
 - TV(Only Power) by @DerrickGibbs1
 
 In Homebridge's config.json file you specify the accessories you want to enable, and link the appropiate Crestron signals via the included SIMPL+ Module (tested on MC3,AP3,PRO3). You can then use the iOS 10 Home app to tie the accessories to rooms and groups.
