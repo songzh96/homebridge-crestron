@@ -30,6 +30,9 @@
 - ~~support 4 series crestron professor~~,because The program compiled by SIMPL4.14 will have strange bugs
 - add Custom Fahrenheit, see config_sample.json
 
+**V2.3.4**
+- add Custom Temperature step, see config_sample.json
+
 If you want to know how to use this plugin，please see Chinese [README](https://github.com/songzh96/homebridge-crestron/blob/master/README-ZhCN.md)（use Google translate）
 
 CresKit (together with Homebridge) turns Creston controlled devices into HomeKit accessories, enabling you to control many functions using Siri and the iOS 10 Home app. 

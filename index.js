@@ -123,10 +123,11 @@ function CresKitAccessory(log, platformConfig, accessoryConfig) {
     this.config = accessoryConfig;
     this.id = accessoryConfig.id;
     this.name = accessoryConfig.name;
-    this.model = "Komen v2.2.1";
+    this.model = "Komen v2.3.4";
     this.minValue = platformConfig.minValue || 16;
     this.maxValue = platformConfig.maxValue || 32;
     this.Fahrenheit = platformConfig.Fahrenheit || 0;
+    this.minStep = platformConfig.minStep || 1;
 }
 
 CresKitAccessory.prototype = {
@@ -373,8 +374,8 @@ CresKitAccessory.prototype = {
         eventEmitter.once(this.config.type + ":" + this.id + ":getCurrentTemperature", function (value) {
             try {
                 closeGetStatus(this.config.type + ":" + this.id + ":getCurrrentTemperature:*");
-                eventEmitter.emit(this.config.type + ":" + this.id + ":eventCurrentTemperature", value);
-                callback(null, value);
+                eventEmitter.emit(this.config.type + ":" + this.id + ":eventCurrentTemperature", value/10);
+                callback(null, value/10);
             } catch (err) {
                 this.log(err);
             }
@@ -388,8 +389,8 @@ CresKitAccessory.prototype = {
         eventEmitter.once(this.config.type + ":" + this.id + ":getTargetTemperature", function (value) {
             try {
                 closeGetStatus(this.config.type + ":" + this.id + ":getTargetTemperature:*");
-                eventEmitter.emit(this.config.type + ":" + this.id + ":eventTargetTemperature", value);
-                callback(null, value);
+                eventEmitter.emit(this.config.type + ":" + this.id + ":eventTargetTemperature", value/10);
+                callback(null, value/10);
             } catch (err) {
                 this.log(err);
             }
@@ -397,7 +398,7 @@ CresKitAccessory.prototype = {
     },
 
     setTargetTemperature: function (value, callback) {
-        cresKitSocket.write(this.config.type + ":" + this.id + ":setTargetTemperature:" + value + "*"); // (* after value required on set)
+        cresKitSocket.write(this.config.type + ":" + this.id + ":setTargetTemperature:" + value*10 + "*"); // (* after value required on set)
         callback();
     },
 
@@ -981,7 +982,7 @@ CresKitAccessory.prototype = {
                     .setProps({
                         minValue: this.minValue,
                         maxValue: this.maxValue,
-                        minStep: 1
+                        minStep: this.minStep,
                     })
                     .on('set', this.setTargetTemperature.bind(this))
                     .on('get', this.getTargetTemperature.bind(this));
@@ -1004,13 +1005,13 @@ CresKitAccessory.prototype = {
                 //TargetTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetTemperature", function (value) {
 
-                    TargetTemperature.updateValue(value);
+                    TargetTemperature.updateValue(value/10);
 
                 }.bind(this));
 
                 //CurrentTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentTemperature", function (value) {
-                    CurrentTemperature.updateValue(value);
+                    CurrentTemperature.updateValue(value/10);
                 }.bind(this));
 
                 services.push(ThermostatService);
@@ -1040,7 +1041,7 @@ CresKitAccessory.prototype = {
                     .setProps({
                         minValue: this.minValue,
                         maxValue: this.maxValue,
-                        minStep: 1
+                        minStep: this.minStep
                     })
                     .on('set', this.setTargetTemperature.bind(this))
                     .on('get', this.getTargetTemperature.bind(this));
@@ -1049,7 +1050,7 @@ CresKitAccessory.prototype = {
                     .setProps({
                         minValue: this.minValue,
                         maxValue: this.maxValue,
-                        minStep: 1
+                        minStep: this.minStep
                     })
                     .on('set', this.setTargetTemperature.bind(this))
                     .on('get', this.getTargetTemperature.bind(this));
@@ -1086,13 +1087,13 @@ CresKitAccessory.prototype = {
 
                 //CurrentTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentTemperature", function (value) {
-                    CurrentTemperature.updateValue(value);
+                    CurrentTemperature.updateValue(value/10);
                 }.bind(this));
 
                 //TargetTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetTemperature", function (value) {
-                    HeatingThresholdTemperature.updateValue(value);
-                    CoolingThresholdTemperature.updateValue(value);
+                    HeatingThresholdTemperature.updateValue(value/10);
+                    CoolingThresholdTemperature.updateValue(value/10);
                 }.bind(this));
 
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventRotationSpeed", function (value) {
@@ -1127,7 +1128,7 @@ CresKitAccessory.prototype = {
                     .setProps({
                         minValue: this.minValue,
                         maxValue: this.maxValue,
-                        minStep: 1
+                        minStep: this.minStep
                     })
                     .on('set', this.setTargetTemperature.bind(this))
                     .on('get', this.getTargetTemperature.bind(this));
@@ -1152,12 +1153,12 @@ CresKitAccessory.prototype = {
 
                 //CurrentTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentTemperature", function (value) {
-                    CurrentTemperature.updateValue(value);
+                    CurrentTemperature.updateValue(value/10);
                 }.bind(this));
 
                 //TargetTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetTemperature", function (value) {
-                    HeatingThresholdTemperature.updateValue(value);
+                    HeatingThresholdTemperature.updateValue(value/10);
                 }.bind(this));
 
                 services.push(HeaterService);
@@ -1187,7 +1188,7 @@ CresKitAccessory.prototype = {
                     .setProps({
                         minValue: this.minValue,
                         maxValue: this.maxValue,
-                        minStep: 1
+                        minStep: this.minStep
                     })
                     .on('set', this.setTargetTemperature.bind(this))
                     .on('get', this.getTargetTemperature.bind(this));
@@ -1212,12 +1213,12 @@ CresKitAccessory.prototype = {
 
                 //CurrentTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentTemperature", function (value) {
-                    CurrentTemperature.updateValue(value);
+                    CurrentTemperature.updateValue(value/10);
                 }.bind(this));
 
                 //TargetTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetTemperature", function (value) {
-                    CoolingThresholdTemperature.updateValue(value);
+                    CoolingThresholdTemperature.updateValue(value/10);
                 }.bind(this));
 
                 services.push(CoolerService);
