@@ -1,0 +1,16 @@
+{
+    "pluginAlias": "crestron-platform",
+    "pluginType": "platform",
+    "singular": true,
+    "schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string",
+          "default": "crestron",
+          "required": true
+        }
+      }
+    }
+  }
