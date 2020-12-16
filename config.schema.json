@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "crestron-platform",
+  "pluginAlias": "CresKit",
   "pluginType": "platform",
   "singular": true,
   "schema": {
@@ -12,15 +12,15 @@
         "required": true
       },
       "host": {
-        "title": "username",
-        "type": "number",
+        "title": "host",
+        "type": "string",
         "default": "192.168.1.99",
         "required": true
       },
       "port": {
         "title": "port",
-        "type": "number",
-        "default": 50001,
+        "type": "string",
+        "default": "50001",
         "required": true
       },
       "minValue": {
@@ -60,7 +60,7 @@
             "source": {
               "title": "id",
               "type": "number",
-              "default": "1",
+              "default": 1,
               "required": true
             },
             "type": {
