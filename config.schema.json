@@ -8,20 +8,22 @@
       "name": {
         "title": "name",
         "type": "string",
-        "default": "Komen",
+        "default": "KOMEN",
         "required": true
       },
       "host": {
         "title": "host",
         "type": "string",
         "default": "192.168.1.99",
-        "required": true
+        "required": true,
+        "description": "Crestron host IP"
       },
       "port": {
         "title": "port",
         "type": "string",
         "default": "50001",
-        "required": true
+        "required": true,
+        "description": "the Marco Port"
       },
       "minValue": {
         "title": "minValue",
@@ -39,9 +41,11 @@
       },
       "Fahrenheit": {
         "title": "Fahrenheit",
-        "type": "number",
+        "type": "integer",
         "default": 1,
         "required": false,
+        "minimum": 0,
+        "maximum": 1,
         "description": "HeaterCooler Temperature Display 1:Fahrenheit, 0:Celsius,Default:0"
       },
       "minStep": {
@@ -52,15 +56,17 @@
         "description": "HeaterCooler Temperature minStep"
       },
       "accessories": {
-        "title": "array",
+        "title": "accessories",
+        "type": "array",
         "items": {
           "title": "Accessories Config",
           "type": "object",
           "properties": {
-            "source": {
+            "ID": {
               "title": "id",
               "type": "number",
               "default": 1,
+              "minimum": 1,
               "required": true
             },
             "type": {
