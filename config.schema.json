@@ -14,9 +14,9 @@
       "host": {
         "title": "host",
         "type": "string",
-        "default": "192.168.1.99",
+        "placeholder": "192.168.1.100",
         "required": true,
-        "description": "Crestron host IP"
+        "description": "Crestron professor IP must added"
       },
       "port": {
         "title": "port",
