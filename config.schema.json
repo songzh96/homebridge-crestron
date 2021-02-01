@@ -62,7 +62,7 @@
           "title": "Accessories Config",
           "type": "object",
           "properties": {
-            "ID": {
+            "id": {
               "title": "id",
               "type": "number",
               "default": 1,
