@@ -1,6 +1,6 @@
 {
   "name": "homebridge-creskit2",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "A crestron plugin for homebridge",
   "main": "index.js",
   "scripts": {

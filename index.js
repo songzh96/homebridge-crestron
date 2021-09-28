@@ -374,8 +374,8 @@ CresKitAccessory.prototype = {
         eventEmitter.once(this.config.type + ":" + this.id + ":getCurrentTemperature", function (value) {
             try {
                 closeGetStatus(this.config.type + ":" + this.id + ":getCurrrentTemperature:*");
-                eventEmitter.emit(this.config.type + ":" + this.id + ":eventCurrentTemperature", value/10);
-                callback(null, value/10);
+                eventEmitter.emit(this.config.type + ":" + this.id + ":eventCurrentTemperature", value);
+                callback(null, value);
             } catch (err) {
                 this.log(err);
             }
@@ -389,8 +389,8 @@ CresKitAccessory.prototype = {
         eventEmitter.once(this.config.type + ":" + this.id + ":getTargetTemperature", function (value) {
             try {
                 closeGetStatus(this.config.type + ":" + this.id + ":getTargetTemperature:*");
-                eventEmitter.emit(this.config.type + ":" + this.id + ":eventTargetTemperature", value/10);
-                callback(null, value/10);
+                eventEmitter.emit(this.config.type + ":" + this.id + ":eventTargetTemperature", value);
+                callback(null, value);
             } catch (err) {
                 this.log(err);
             }
@@ -398,7 +398,7 @@ CresKitAccessory.prototype = {
     },
 
     setTargetTemperature: function (value, callback) {
-        cresKitSocket.write(this.config.type + ":" + this.id + ":setTargetTemperature:" + value*10 + "*"); // (* after value required on set)
+        cresKitSocket.write(this.config.type + ":" + this.id + ":setTargetTemperature:" + value + "*"); // (* after value required on set)
         callback();
     },
 
@@ -1005,13 +1005,13 @@ CresKitAccessory.prototype = {
                 //TargetTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetTemperature", function (value) {
 
-                    TargetTemperature.updateValue(value/10);
+                    TargetTemperature.updateValue(value);
 
                 }.bind(this));
 
                 //CurrentTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentTemperature", function (value) {
-                    CurrentTemperature.updateValue(value/10);
+                    CurrentTemperature.updateValue(value);
                 }.bind(this));
 
                 services.push(ThermostatService);
@@ -1087,13 +1087,13 @@ CresKitAccessory.prototype = {
 
                 //CurrentTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentTemperature", function (value) {
-                    CurrentTemperature.updateValue(value/10);
+                    CurrentTemperature.updateValue(value);
                 }.bind(this));
 
                 //TargetTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetTemperature", function (value) {
-                    HeatingThresholdTemperature.updateValue(value/10);
-                    CoolingThresholdTemperature.updateValue(value/10);
+                    HeatingThresholdTemperature.updateValue(value);
+                    CoolingThresholdTemperature.updateValue(value);
                 }.bind(this));
 
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventRotationSpeed", function (value) {
@@ -1153,12 +1153,12 @@ CresKitAccessory.prototype = {
 
                 //CurrentTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentTemperature", function (value) {
-                    CurrentTemperature.updateValue(value/10);
+                    CurrentTemperature.updateValue(value);
                 }.bind(this));
 
                 //TargetTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetTemperature", function (value) {
-                    HeatingThresholdTemperature.updateValue(value/10);
+                    HeatingThresholdTemperature.updateValue(value);
                 }.bind(this));
 
                 services.push(HeaterService);
@@ -1213,12 +1213,12 @@ CresKitAccessory.prototype = {
 
                 //CurrentTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventCurrentTemperature", function (value) {
-                    CurrentTemperature.updateValue(value/10);
+                    CurrentTemperature.updateValue(value);
                 }.bind(this));
 
                 //TargetTemperature
                 eventEmitter.on(this.config.type + ":" + this.id + ":eventTargetTemperature", function (value) {
-                    CoolingThresholdTemperature.updateValue(value/10);
+                    CoolingThresholdTemperature.updateValue(value);
                 }.bind(this));
 
                 services.push(CoolerService);

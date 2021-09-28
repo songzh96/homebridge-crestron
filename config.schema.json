@@ -92,6 +92,18 @@
                   ]
                 },
                 {
+                  "title": "Heater",
+                  "enum": [
+                    "Heater"
+                  ]
+                },
+                {
+                  "title": "Cooler",
+                  "enum": [
+                    "Cooler"
+                  ]
+                },
+                {
                   "title": "SpeedFan",
                   "enum": [
                     "SpeedFan"
@@ -137,6 +149,18 @@
                   "title": "OccupancySensor",
                   "enum": [
                     "OccupancySensor"
+                  ]
+                },
+                {
+                  "title": "MotionSensor",
+                  "enum": [
+                    "MotionSensor"
+                  ]
+                },
+                {
+                  "title": "SmokeSensor",
+                  "enum": [
+                    "SmokeSensor"
                   ]
                 },
                 {
