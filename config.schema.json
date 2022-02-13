@@ -28,21 +28,21 @@
       "minValue": {
         "title": "minValue",
         "type": "number",
-        "default": 60,
+        "default": 16,
         "required": false,
         "description": "HeaterCooler SetTemperature MinValue,Default:16"
       },
       "maxValue": {
         "title": "maxValue",
         "type": "number",
-        "default": 90,
+        "default": 32,
         "required": false,
         "description": "HeaterCooler SetTemperature MaxValue,Default:32"
       },
       "Fahrenheit": {
         "title": "Fahrenheit",
         "type": "integer",
-        "default": 1,
+        "default": 0,
         "required": false,
         "minimum": 0,
         "maximum": 1,
@@ -51,7 +51,7 @@
       "minStep": {
         "title": "minStep",
         "type": "number",
-        "default": 0.1,
+        "default": 1,
         "required": false,
         "description": "HeaterCooler Temperature minStep"
       },

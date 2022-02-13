@@ -22,7 +22,7 @@ function closeGetStatus(what) {
     var found = openGetStatus.indexOf(what);
     openGetStatus.splice(found, 1);
 
-    this.log(openGetStatus);
+    //this.log(openGetStatus);
 }
 
 // Resend unclosed GetStatus
@@ -373,7 +373,7 @@ CresKitAccessory.prototype = {
 
         eventEmitter.once(this.config.type + ":" + this.id + ":getCurrentTemperature", function (value) {
             try {
-                closeGetStatus(this.config.type + ":" + this.id + ":getCurrrentTemperature:*");
+                closeGetStatus(this.config.type + ":" + this.id + ":getCurrentTemperature:*");
                 eventEmitter.emit(this.config.type + ":" + this.id + ":eventCurrentTemperature", value);
                 callback(null, value);
             } catch (err) {
