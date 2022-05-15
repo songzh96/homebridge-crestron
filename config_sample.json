@@ -11,9 +11,9 @@
       "name": "Komen",
       "host": "192.168.1.99",
       "port": "50001",
-      "minValue":60,  // HeaterCooler SetTemperature MinValue,Default:16
-      "maxValue":90,  // HeaterCooler SetTemperature MaxValue,Default:32
-      "Fahrenheit":1, // HeaterCooler Temperature Display 1:Fahrenheit, 0:Celsius,Default:0
+      "minValue":16,  // HeaterCooler SetTemperature MinValue,Default:16
+      "maxValue":32,  // HeaterCooler SetTemperature MaxValue,Default:32
+      "Fahrenheit":0, // HeaterCooler Temperature Display 1:Fahrenheit, 0:Celsius,Default:0
       "minStep":0.1,
       "accessories": [
         {
