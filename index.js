@@ -21,8 +21,7 @@ var openGetStatus = []; // Sometimes a getStatus does not come back. We need to 
 function closeGetStatus(what) {
     var found = openGetStatus.indexOf(what);
     openGetStatus.splice(found, 1);
-
-    //this.log(openGetStatus);
+    console.log(openGetStatus);
 }
 
 // Resend unclosed GetStatus
@@ -30,9 +29,9 @@ function retryGetStatus() {
     async.each(openGetStatus, function (writeString, callback) {
         try {
             cresKitSocket.write(writeString);
-            this.log("RETRY: " + writeString);
+            console.log("RETRY: " + writeString);
         } catch (err) {
-            this.log(err);
+            console.log(err);
         }
         callback();
     }.bind(this), function (err) {
